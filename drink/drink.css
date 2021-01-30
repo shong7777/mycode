@@ -1,0 +1,51 @@
+#app {
+    width: max-content;
+    margin: 100px auto;
+}
+
+#app form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 20px;
+}
+
+#app form input.input {
+    width: 100px;
+}
+
+span.inputSpan {
+    text-align: right;
+}
+
+input#place {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    width: max-content;
+    margin: 0 auto;
+}
+
+ul.orderList,
+div.total {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    margin: 0 auto;
+}
+
+ul li textarea {
+    vertical-align: middle;
+}
+
+.itemName {
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+ul li div.itemList {
+    display: grid;
+    grid-template-columns: 120px 80px auto 100px 100px;
+    column-gap: 10px;
+    margin: 10px 0;
+}
