@@ -11,6 +11,9 @@
 
 #app form input.input {
     width: 100px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 span.inputSpan {
@@ -19,6 +22,9 @@ span.inputSpan {
 
 input#place {
     width: max-content;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 ul.orderList,
