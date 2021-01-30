@@ -18,14 +18,12 @@ span.inputSpan {
 }
 
 input#place {
-    grid-column-start: 1;
-    grid-column-end: 3;
     width: max-content;
-    margin: 0 auto;
 }
 
 ul.orderList,
-div.total {
+div.total,
+input#place {
     grid-column-start: 1;
     grid-column-end: 3;
     margin: 0 auto;
@@ -45,7 +43,38 @@ ul li textarea {
 
 ul li div.itemList {
     display: grid;
-    grid-template-columns: 120px 80px auto 100px 100px;
+    grid-template-columns: 120px 80px auto 200px;
     column-gap: 10px;
     margin: 10px 0;
+}
+
+@media screen and (max-width: 575px) {
+    #app form {
+        grid-template-columns: 1fr;
+    }
+    span.inputSpan {
+        text-align: center;
+    }
+    ul.orderList,
+    div.total,
+    input#place {
+        grid-column-start: 1;
+        grid-column-end: 1;
+    }
+    #app form input.input {
+        margin: 0 auto;
+        text-align: center;
+    }
+    ul li div.itemList {
+        display: grid;
+        grid-template-columns: 120px 80px auto;
+        column-gap: 10px;
+        margin: 10px 0;
+    }
+    div.Btn {
+        grid-column-start: 1;
+        grid-column-end: 3;
+        text-align: center;
+        margin: 10px 0;
+    }
 }

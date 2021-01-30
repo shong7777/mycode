@@ -81,8 +81,10 @@
                             <span class='itemName'>{{item.name}}</span>
                             <span>{{item.price}}元</span>
                             <span>{{item.note}}</span>
-                            <input type="button" value="修改訂單" @click='changebtn = false' >
-                            <input type="button" value="刪除訂單" @click='removeitem(index)'>
+                            <div class="Btn">
+                                <input type="button" value="修改訂單" @click='changebtn = false' >
+                                <input type="button" value="刪除訂單" @click='removeitem(index)'>
+                            </div>
                         </div>
                         <div v-if='changebtn==false'>
                             <span>飲料名稱：</span><input type="text" v-model='item.name' class="input">
