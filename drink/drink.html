@@ -15,7 +15,7 @@
             <span class="inputSpan">飲料名稱：</span><input type="text" v-model='name' class="input">
             <span class="inputSpan">飲料價格：</span><input type="number" v-model='price' class="input">
             <!-- <span class="inputSpan">飲料杯數：</span><input type="number" v-model='num' class="input" min="1"> -->
-            <span class="inputSpan">備註：</span><textarea name="" cols="30" rows="5" v-model='note'></textarea>
+            <span class="inputSpan">備註：</span><textarea name="" cols="30" rows="5" v-model='note' class="noteText"></textarea>
             <input type="submit" value="送出訂單" @click.prevent='placeOrder' id="place">
             <ul class="orderList">
                 <item-li v-for='(item,index) in orders' :item='item' :index="index" />
@@ -86,10 +86,16 @@
                                 <input type="button" value="刪除訂單" @click='removeitem(index)'>
                             </div>
                         </div>
-                        <div v-if='changebtn==false'>
+                        <div v-if='changebtn==false' class='modifyDiv'>
+                            <div>
                             <span>飲料名稱：</span><input type="text" v-model='item.name' class="input">
+                            </div>
+                            <div>
                             <span>飲料價格：</span><input type="text" v-model='item.price' class="input">
+                            </div>
+                            <div>
                             <span>備註：</span><textarea name="" id="" cols="15" rows="10" v-model='item.note'></textarea>
+                            </div>
                             <input type="button" value="確認修改" @click='changebtn = true'>
                         </div>
                     </li>

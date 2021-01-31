@@ -39,6 +39,11 @@ ul li textarea {
     vertical-align: middle;
 }
 
+textarea.noteText {
+    width: 150px;
+    margin: 0 auto;
+}
+
 .itemName {
     width: 120px;
     overflow: hidden;
@@ -82,5 +87,12 @@ ul li div.itemList {
         grid-column-end: 3;
         text-align: center;
         margin: 10px 0;
+    }
+    div.modifyDiv {
+        display: grid;
+        grid-template-columns: 1fr;
+        row-gap: 15px;
+        border: 1px black solid;
+        padding: 10px;
     }
 }
