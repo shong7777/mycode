@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>關於我們</title>
+    <script src="./js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./vendors/bootstrap-4.6.0-dist/css/bootstrap.min.css">
+    <script src="./js/jquery-3.5.1.min.js"></script>
+    <script src="./vendors/bootstrap-4.6.0-dist/js/bootstrap.min.js"></script>
+    <!-- <link rel="stylesheet" href="./css/index.css"> -->
+    <link rel="stylesheet" href="./css/about.css">
+</head>
+
+<body>
+    <div id="loading">
+        <div class="loadingio-spinner-spinner-bymfanlw6e"><div class="ldio-dwsc5f948su"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+    </div>
+    <div id="app">
+        <header class="container-fluid">
+    <div class="col col-sm-4">
+        <a href="./index.html">
+            <img src="./images/logo.png" alt="這是logo" srcset="" id="logo">
+        </a>
+    </div>
+    <div id="h_function" class="col-lg-2 offset-lg-4 col-sm-3 offset-sm-2">
+        <div id="bag" @click='cartShow=true'>
+            <img src="./images/001-shopping-bag.svg" alt="這是購物車" srcset="">
+            <span v-if='addItemList'>{{addItemList.length}}</span>
+        </div>
+        <button class="hamburger hamburger--elastic " type="button" id="hamburger">
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
+        </button>
+        <nav id="nav" class="nav">
+            <ul>
+                <li><a href="./about.html"><span>關於我們</span></a></li>
+                <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button id="checking_orderBtn">查詢訂單</button></li>
+                <li @click='notice=true' style="cursor: pointer;">購買須知</li>
+                <div id="notice" v-if="notice" @click.self='notice=false'>
+                    <div>
+                        <span class='closeLB' @click='notice=false' style="color: black;">×</span>
+                        <h4 id="noticeText" style="color:black">注意事項</h4>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="headerspace"></div>
+        <div class="container">
+                <transition name='slide'>
+        <div id="cartBg" v-show="cartShow" @click.self='cartShow=false'>
+            <div id="cart">
+                <div class="itemList">
+                    <cart-item v-for='product in addItems' :product='product' :key='product.ID'></cart-item>
+                </div>
+                <div class="check">
+                    <div>總計:<span>{{total}}</span></div>
+                    <a href="./cart.html">結帳</a>
+                </div>
+            </div>
+        </div>
+    </transition>
+            <h3>關於我們</h3>
+            <img src="./images/adv.jpg" alt="">
+            <h3>facebook</h3>
+            <div>
+                <a href="https://www.facebook.com/HIDEARCAFE/"><img src="./images/logo.png" alt=""></a>
+            </div>
+            <h3>line</h3>
+            <img src="./images/logo.png" alt="">
+            <h3>地址</h3>
+            <div style="margin-bottom: 20px;">326桃園市楊梅區自強街2號</div>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.651050413267!2d121.15216431500382!3d24.909881684030637!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346824b351721951%3A0x9187b8ab90b6c1cd!2sHi%20Dear%20Cafe%202553!5e0!3m2!1szh-TW!2stw!4v1615719918236!5m2!1szh-TW!2stw"
+                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </div>
+    <footer>
+    <h5>Copyright 2021 HiDearCafe All Rights Reserved.</h5>
+    <div class="add">
+        <p>訂購專線：03-4751386</p>
+        <p>營業時間：上午11:00 - 下午9:00(每周一、二公休)</p>
+        <p>地址：326桃園市楊梅區自強街2號</p>
+    </div>
+</footer>
+    <script src="./js/bag.js"></script>
+    <script src="./js/about.js"></script>
+    <script src="./js/nav.js"></script>
+</body>
+
+</html>

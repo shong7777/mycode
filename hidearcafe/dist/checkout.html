@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>結帳</title>
+    <script src="./js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./vendors/bootstrap-4.6.0-dist/css/bootstrap.min.css">
+    <script src="./js/jquery-3.5.1.min.js"></script>
+    <script src="./vendors/bootstrap-4.6.0-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./css/checkout.css">
+    <link rel="stylesheet" type="text/css" href="./vendors/slick-1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="./vendors/slick-1.8.1/slick/slick-theme.css" />
+    <script type="text/javascript" src="./vendors/slick-1.8.1/slick/slick.min.js"></script>
+</head>
+
+<body>
+    <div id="loading">
+        <div class="loadingio-spinner-spinner-bymfanlw6e"><div class="ldio-dwsc5f948su"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+    </div>
+    <div id="app">
+        <header class="container-fluid">
+    <div class="col col-sm-4">
+        <a href="./index.html">
+            <img src="./images/logo.png" alt="這是logo" srcset="" id="logo">
+        </a>
+    </div>
+    <div id="h_function" class="col-lg-2 offset-lg-4 col-sm-3 offset-sm-2">
+        <div id="bag" @click='cartShow=true'>
+            <img src="./images/001-shopping-bag.svg" alt="這是購物車" srcset="">
+            <span v-if='addItemList'>{{addItemList.length}}</span>
+        </div>
+        <button class="hamburger hamburger--elastic " type="button" id="hamburger">
+            <span class="hamburger-box">
+              <span class="hamburger-inner"></span>
+            </span>
+        </button>
+        <nav id="nav" class="nav">
+            <ul>
+                <li><a href="./about.html"><span>關於我們</span></a></li>
+                <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button id="checking_orderBtn">查詢訂單</button></li>
+                <li @click='notice=true' style="cursor: pointer;">購買須知</li>
+                <div id="notice" v-if="notice" @click.self='notice=false'>
+                    <div>
+                        <span class='closeLB' @click='notice=false' style="color: black;">×</span>
+                        <h4 id="noticeText" style="color:black">注意事項</h4>
+                    </div>
+                </div>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="headerspace"></div>
+        <div class="container">
+            <form action="./phps/sendorder.php" name='orderform' method="POST">
+                <div class="itemList">
+                    <div>
+                        <h2>購物清單</h2>
+                        <input type="hidden" name="addItemList" id='addItemList' :value='itemList'>
+                        <cart-item v-for='product in addItems' :product='product' :key='product.ID' ref='items'></cart-item>
+                        <div v-if='addpriceproduct'>
+                            <input type="hidden" name="addpriceproduct" :value='addpriceproduct.ID'>
+                            <h3>加價購</h3>
+                            <cart-item :product='addpriceproduct' :key='addpriceproduct.ID' ref='addpriceproduct'></cart-item>
+                        </div>
+                        <h3>訂單金額:{{total}}</h3>
+                        <div v-if='total>2000'>
+                            <div v-if='GiftWithPurchase'>
+                                <h3>滿額贈</h3>
+                                <input type="hidden" name="GiftWithPurchase" :value='GiftWithPurchase.ID'>
+                                <cart-item :product='GiftWithPurchase' :key='GiftWithPurchase.ID'></cart-item>
+                                <br>
+                                <input type="button" value="選擇其他贈品" @click='changeGWP' class="change">
+                            </div>
+                            <div v-if='showGiftWithPurchaseList'>
+                                <h4 class="col-12" v-if='total>=2000 && total<3000'>滿2000贈送: </h4>
+                                <h4 class="col-12" v-if='total>=3000 && total<4000'>滿3000贈送: </h4>
+                                <h4 class="col-12" v-if='total>=4000 && total<5000'>滿4000贈送: </h4>
+                                <div class="row" id="gwp">
+                                    <product-card v-for='product in allGiftWithPurchase' :product='product' :key='product.ID'></product-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="infoT">
+                    <div>
+                        <label>訂購人：</label><br>
+                        <input type="text" name="sName" id="sName" placeholder="訂購人姓名" value="test" @change='saveInfo' v-model='sName'>
+                    </div>
+                    <div>
+                        <label>訂購人電話：</label><br>
+                        <input type="text" name="sPhone" id="sPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='sPhone'>
+                    </div>
+                    <div>
+                        <label>訂購人地址：</label><br>
+                        <input type="text" name="sAdd" id="sAdd" placeholder="訂購人地址" @change='saveInfo' v-model='sAdd'>
+                    </div>
+                    <div>
+                        <label>收件人：</label><input type="button" value="同寄件人" @click='syncinfo' class="like"><br>
+                        <input type="text" name="rName" id="rName" placeholder="收件人姓名" @change='saveInfo' v-model='rName'>
+                    </div>
+                    <div>
+                        <label>收件人電話：</label><br>
+                        <input type="text" name="rPhone" id="rPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='rPhone'>
+                    </div>
+                    <div>
+                        <label>收件人地址：</label><br>
+                        <div class="zip">
+                            <select name="district" v-model='district' @change='saveInfo'>
+                                <option value="">請選擇縣市</option>
+                                <option :value="i" v-for='(district,i) in taiwan_districts'>{{district.name}}</option>
+                            </select>
+                            <select name="area" v-model='area' @change='saveInfo'>
+                                <option value="">請選擇地區</option>
+                                <option :value="i" v-for='(area,i) in selecteddistrict'>{{area}}</option>
+                            </select>
+                            <span>郵遞區號：<input type="text" :value='zip' name='zipcode' id='zipcode' v-if='area!==""'></span>
+                        </div>
+                        <input type="text" name="rAdd" id="rAdd" placeholder="收件人地址" @change='saveInfo' v-model='rAdd'>
+                    </div>
+                    <div>
+                        <label>附註：</label><br>
+                        <textarea name="note" id="note" cols="40" rows="6" placeholder="有話想說"></textarea>
+                    </div>
+                    <div class="function">
+                        <label>寄送方式：</label><br>
+                        <select name="delivery" id="delivery"><option value="宅配到府">宅配到府</option></select>
+                        <label>運費:{{calDeliveryFee}}</label>
+                    </div>
+                    <div class="function">
+                        <label>優惠卷：</label><br>
+                        <div v-if='discount!=0'>折扣：{{discount}}</div>
+                        <input type="button" value="輸入優惠碼" @click='discountLB=true' class="like">
+                        <div v-show='discountLB' id="discountLB">
+                            <input type="text" name="discount" placeholder="請輸入優惠卷" v-model='discountText'>
+                            <input type="button" value="取消" @click='discountLB=false;discountText="";discount=0' class='btn_w btn_s'>
+                            <input type="button" value="確認" @click='checkcoupon' name='' class="btn_s ">
+                        </div>
+                    </div>
+                    <div class="function">
+                        <label>付款方式：</label><br>
+                        <div>
+                            綠界金流：信用卡 ATM 便利商店付款
+                        </div>
+                        <!-- <select name="pay" id="pay">
+                            <option value="">請選擇付款方式</option>
+                            <option value="信用卡轉帳">信用卡轉帳</option>
+                            <option value="ATM轉帳">ATM轉帳</option>
+                            <option value="便利商店付款">便利商店付款</option>
+                        </select> -->
+                    </div>
+                    <div class="function confirm">
+                        <a href="./index.html" class="btn">取消</a>
+                        <input type="submit" value="確認結帳" @click.prevent='submitForm' class="btn">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <footer>
+    <h5>Copyright 2021 HiDearCafe All Rights Reserved.</h5>
+    <div class="add">
+        <p>訂購專線：03-4751386</p>
+        <p>營業時間：上午11:00 - 下午9:00(每周一、二公休)</p>
+        <p>地址：326桃園市楊梅區自強街2號</p>
+    </div>
+</footer>
+    </div>
+    <script src="./js/checkout.js"></script>
+    <script src="./js/nav.js"></script>
+</body>
+
+</html>
