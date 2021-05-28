@@ -14,7 +14,7 @@ try {
     } else { //找得到
         $productRow = $products->fetchAll(PDO::FETCH_ASSOC);
         //送出json字串
-        echo json_encode($productRow);
+        echo json_encode($productRow, JSON_UNESCAPED_UNICODE);
     }
 } catch (PDOException $e) {
     echo "錯誤行號 : " . $e->getLine() . "<br>"; 

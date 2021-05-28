@@ -37,7 +37,7 @@ try {
     
     
     $a=[$productRow,$typesRow,$typesRow2];
-    echo json_encode($a);
+    echo json_encode($a, JSON_UNESCAPED_UNICODE);
 } catch (PDOException $e) {
     echo "錯誤行號 : " . $e->getLine() . "<br>"; 
     echo "錯誤原因 : " . $e->getMessage() . "<br>";

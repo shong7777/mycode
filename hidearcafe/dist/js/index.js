@@ -198,35 +198,43 @@ const app = new Vue({
         } else {
             storage['addItemList'] = '';
         };
+        //靜待網頁資料開始
+        this.type = ["塔", "蛋糕"];
+        this.type2 = ["巴西", "瓜地馬拉", "哥倫比亞"];
         axios
-            .all([this.getProducts(this.whatorderby), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
-                app.Allproducts = Products.data[0];
-                let type = [];
-                for (let i in Products.data[1]) {
-                    type.push(Products.data[1][i].TYPE)
-                };
-                app.type = app.type.concat(type);
-                let type2 = [];
-                for (let i in Products.data[2]) {
-                    type2.push(Products.data[2][i].TYPE)
-                };
-                app.type2 = app.type2.concat(type2);
-                app.advs = ShoppingAdv.data;
-                console.log('done');
-                app.$nextTick(
-                    function() {
-                        $('#adv').slick({
-                            arrows: true,
-                            autoplay: true,
-                            autoplaySpeed: 2000,
-                            infinite: true,
-                            dots: true,
-                            slidesToScroll: 1,
-                            slidesToShow: 1,
-                        });
-                    });
-                document.getElementById('loading').style.display = 'none';
-            }));
+            .get('./js/product.json')
+            .then(response => { this.Allproducts = response.data })
+        this.advs = [{ "ADV_ID": "10001", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10001", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 1", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10002", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10002", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 2", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10003", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10003", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 3", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10004", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10007", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 7", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }];
+        //靜態網頁資料結束
+
+        // axios
+        //     .all([this.getProducts(this.whatorderby), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
+        //         app.Allproducts = Products.data[0];
+        //         let type = [];
+        //         for (let i in Products.data[1]) {
+        //             type.push(Products.data[1][i].TYPE)
+        //         };
+        //         app.type = app.type.concat(type);
+        //         let type2 = [];
+        //         for (let i in Products.data[2]) {
+        //             type2.push(Products.data[2][i].TYPE)
+        //         };
+        //         app.type2 = app.type2.concat(type2);
+        //         app.advs = ShoppingAdv.data;
+        this.$nextTick(
+            function() {
+                $('#adv').slick({
+                    arrows: true,
+                    autoplay: true,
+                    autoplaySpeed: 2000,
+                    infinite: true,
+                    dots: true,
+                    slidesToScroll: 1,
+                    slidesToShow: 1,
+                });
+            });
+        document.getElementById('loading').style.display = 'none';
+        //     }));
     },
     mounted() {
         this.caltotal()
