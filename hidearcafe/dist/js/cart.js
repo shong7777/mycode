@@ -7,7 +7,7 @@ Vue.component('cartItem', {
                 <div class="item_img col-sm-2 col-3">
                     <img :src="product.IMG" alt="">
                 </div>
-                <div class='col-sm-10 col-9 pname row'>
+                <div class='col-sm-10 col-9 pinfo row'>
                     <div class='col-sm-5 col-12 pname'>
                         <span >{{product.NAME}}</span>
                     </div>
