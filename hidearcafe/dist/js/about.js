@@ -15,21 +15,6 @@ const app = new Vue({
             let l = storage['addItemList'].split(',');
             l.pop();
             this.addItemList = l;
-            this.itemList = storage['addItemList'];
-            let Allproducts = [];
-            for (let i in l) {
-                let info = storage[l[i]].split('|'),
-                    obj = {
-                        ID: info[0],
-                        NAME: info[1],
-                        IMG: info[2],
-                        SIZE: info[3],
-                        PRICE: info[4],
-                        NUM: info[5]
-                    };
-                Allproducts.push(obj);
-            }
-            this.addItems = Allproducts;
         } else {
             storage['addItemList'] = '';
         };
