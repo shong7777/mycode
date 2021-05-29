@@ -1907,7 +1907,7 @@ const app = new Vue({
                         // storage.removeItem('addItemList');
                         // storage.removeItem('addpriceproduct');
                         // document.orderform.submit();
-                        location.href = 'https://shong7777.github.io/mycode/hidearcafe/dist/orders.html?orders_no=3'
+                        location.href = './orders.html?orders_no=3'
                     }
 
                 }
