@@ -1906,7 +1906,8 @@ const app = new Vue({
                         // }
                         // storage.removeItem('addItemList');
                         // storage.removeItem('addpriceproduct');
-                        document.orderform.submit();
+                        // document.orderform.submit();
+                        location.href = 'http://localhost/cafe/hidearcafe/dist/orders.html?orders_no=3'
                     }
 
                 }
