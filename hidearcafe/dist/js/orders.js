@@ -25,7 +25,7 @@ const app = new Vue({
     el: "#app",
     data() {
         return {
-            addItemList: null,
+            addItemList: [],
             addItems: null,
             orderinfo: null,
             notice: false,
