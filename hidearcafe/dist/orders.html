@@ -71,6 +71,7 @@
                 <h2>訂單編號:{{orderNo}}</h2>
             </div>
             <div class="infoT" v-if='orderinfo!=null'>
+                <div style="color: #ff0000b3;font-size: 12px;text-align: center;">請牢記訂單編號以方便查詢付款及出貨詳情。</div>
                 <div>
                     <label>訂購人：</label> {{orderinfo.NAME_SENDER}}
                 </div>
@@ -115,7 +116,7 @@
                 </div>
             </div>
             <div class="function">
-                <input type="button" @click='print()' value="列印或另存PDF" class="btn">
+                <input type="button" @click='print()' value="列印或另存PDF" class="btn" id="print">
                 <input type="button" @click='href()' value="回首頁" class="btn">
             </div>
         </div>

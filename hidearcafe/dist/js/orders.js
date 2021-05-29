@@ -73,6 +73,7 @@ const app = new Vue({
         //         app.addpriceproducts = data[2];
         //         app.gwpproducts = data[3];
         //     }).catch((error) => { console.error(error) });
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) { document.getElementById('print').style.display = 'inline-block' }
     },
     methods: {
         numchange(e) {
