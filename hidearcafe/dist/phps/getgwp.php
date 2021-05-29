@@ -1,7 +1,8 @@
 <?
 try {
     require_once("./connect.php");
-    $total=$_POST['total'];
+    // $total=$_POST['total'];
+    $total=2500;
     if($total>=2000&&$total<3000){
         $grade=1;
     }elseif($total>=3000&&$total<4000){
@@ -10,7 +11,7 @@ try {
         $grade=3;
     }else{$grade=0;};
     // $orderby =htmlspecialchars($_GET['orderby']);
-        $sql = "SELECT concat('GWP',ID) ID,GRADE,IMG,INFO,NAME,ONSALE,PRICE,SIZE from gift_with_purchase where ONSALE = 1 and GRADE=:grade";
+        $sql = "SELECT concat('GWP',ID) ID,GRADE,IMG,INFO,NAME,PRICE,SIZE from gift_with_purchase where ONSALE = 1 and GRADE=:grade";
         $products = $pdo->prepare($sql);
         $products->bindValue(":grade", $grade);
         $products->execute();
@@ -20,7 +21,7 @@ try {
     } else { //找得到
         $productRow = $products->fetchAll(PDO::FETCH_ASSOC);
         //送出json字串
-        echo json_encode($productRow);
+        echo json_encode($productRow , JSON_UNESCAPED_UNICODE);
 
         
     };

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,10 +16,26 @@
     <link rel="stylesheet" type="text/css" href="./vendors/slick-1.8.1/slick/slick-theme.css" />
     <script type="text/javascript" src="./vendors/slick-1.8.1/slick/slick.min.js"></script>
 </head>
+
 <body>
     <div id="loading">
-        <div class="loadingio-spinner-spinner-bymfanlw6e"><div class="ldio-dwsc5f948su"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+    <div class="loadingio-spinner-spinner-bymfanlw6e">
+        <div class="ldio-dwsc5f948su">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </div>
+</div>
     <div id="app">
         <header class="container-fluid">
     <div class="col col-sm-4">
@@ -53,29 +70,35 @@
 </header>
 <div class="headerspace"></div>
         <h2>購物車</h2>
-        <div class="itemList container" >
-            
-            <div class="itemListContainer">      
-                <cart-item v-for='product in addItems' :product='product' :key='product.ID' ></cart-item>
-                <div  v-if='addpriceproduct'>
+        <div class="itemList container">
+            <div id='addcartLB' v-if="addcartLB" @click.self='addcartLB=false'>
+                <div>
+                    <span id='closeLB' @click='addcartLB=false'>×</span>
+                    <h4 id="addcartLBText" v-html='addcartLBText'></h4>
+                </div>
+            </div>
+
+            <div class="itemListContainer">
+                <cart-item v-for='product in addItems' :product='product' :key='product.ID'></cart-item>
+                <div v-if='addpriceproduct'>
                     <h3>加價購</h3>
                     <addprice-item :product='addpriceproduct' :key='addpriceproduct.ID'></addprice-item>
                     <br>
                     <input type="button" value="選擇其他或取消加價購" @click='changeaddprice' class="change">
                 </div>
-                <hr style="border-top: 2px solid rgba(0,0,0,.4)"> 
+                <hr style="border-top: 2px solid rgba(0,0,0,.4)">
                 <h3>合計:{{calAll}}</h3>
             </div>
-            <div v-if='total>2000&&showaddpriceproductsList' >
+            <div v-if='total>2000&&showaddpriceproductsList'>
                 <h4 class="col-12">滿{{grade}}加價購: </h4>
-                <div class="addpriceList" id="addpricelist" >
-                    <product-card v-for='product in addpriceproducts' :product='product' ></product-card>
+                <div class="addpriceList" id="addpricelist">
+                    <product-card v-for='product in addpriceproducts' :product='product'></product-card>
                 </div>
             </div>
             <div>
                 <a href="./checkout.html" id="checkout" @click='checkout'>繼續結帳</a>
             </div>
-        </div>  
+        </div>
         <footer>
     <h5>Copyright 2021 HiDearCafe All Rights Reserved.</h5>
     <div class="add">
@@ -86,8 +109,9 @@
 </footer>
 
     </div>
-    <script src="./js/cart.js"></script>    
+    <script src="./js/cart.js"></script>
     <script src="./js/nav.js"></script>
 
 </body>
+
 </html>

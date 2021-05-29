@@ -19,8 +19,23 @@
 
 <body>
     <div id="loading">
-        <div class="loadingio-spinner-spinner-bymfanlw6e"><div class="ldio-dwsc5f948su"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+    <div class="loadingio-spinner-spinner-bymfanlw6e">
+        <div class="ldio-dwsc5f948su">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </div>
+</div>
     <div id="app">
         <header class="container-fluid">
     <div class="col col-sm-4">
@@ -128,7 +143,7 @@
                     </div>
                     <div class="function">
                         <label>寄送方式：</label><br>
-                        <select name="delivery" id="delivery"><option value="宅配到府">宅配到府</option></select>
+                        <select name="delivery" id="delivery"><option value="冷凍宅配">冷凍宅配</option></select>
                         <label>運費:{{calDeliveryFee}}</label>
                     </div>
                     <div class="function">
@@ -155,7 +170,7 @@
                     </div>
                     <div class="function confirm">
                         <a href="./index.html" class="btn">取消</a>
-                        <input type="submit" value="確認結帳" @click.prevent='submitForm' class="btn">
+                        <input type="submit" value="送出訂單" @click.prevent='submitForm' class="btn">
                     </div>
                 </div>
             </form>

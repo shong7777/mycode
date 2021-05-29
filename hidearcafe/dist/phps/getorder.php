@@ -64,5 +64,5 @@
     $gwpproducts=$gwpproduct->fetchAll(PDO::FETCH_ASSOC);
 
     $v=[$info,$products,$addpriceproducts,$gwpproducts];
-    echo json_encode($v);
+    echo json_encode($v, JSON_UNESCAPED_UNICODE);
 ?>

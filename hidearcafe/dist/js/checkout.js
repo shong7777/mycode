@@ -1,8 +1,6 @@
 const storage = sessionStorage;
-const  taiwan_districts=[
-    {
-        "districts": [
-            {
+const taiwan_districts = [{
+        "districts": [{
                 "zip": "100",
                 "name": "中正區"
             },
@@ -54,8 +52,7 @@ const  taiwan_districts=[
         "name": "臺北市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "200",
                 "name": "仁愛區"
             },
@@ -87,8 +84,7 @@ const  taiwan_districts=[
         "name": "基隆市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "207",
                 "name": "萬里區"
             },
@@ -229,8 +225,7 @@ const  taiwan_districts=[
     //     "name": "連江縣"
     // },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "260",
                 "name": "宜蘭市"
             },
@@ -295,8 +290,7 @@ const  taiwan_districts=[
     //     "name": "釣魚臺"
     // },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "300",
                 "name": "東區"
             },
@@ -312,8 +306,7 @@ const  taiwan_districts=[
         "name": "新竹市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "308",
                 "name": "寶山鄉"
             },
@@ -369,8 +362,7 @@ const  taiwan_districts=[
         "name": "新竹縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "320",
                 "name": "中壢區"
             },
@@ -426,8 +418,7 @@ const  taiwan_districts=[
         "name": "桃園市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "350",
                 "name": "竹南鎮"
             },
@@ -503,8 +494,7 @@ const  taiwan_districts=[
         "name": "苗栗縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "400",
                 "name": "中區"
             },
@@ -624,8 +614,7 @@ const  taiwan_districts=[
         "name": "臺中市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "500",
                 "name": "彰化市"
             },
@@ -733,8 +722,7 @@ const  taiwan_districts=[
         "name": "彰化縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "540",
                 "name": "南投市"
             },
@@ -790,8 +778,7 @@ const  taiwan_districts=[
         "name": "南投縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "600",
                 "name": "西區"
             },
@@ -803,8 +790,7 @@ const  taiwan_districts=[
         "name": "嘉義市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "602",
                 "name": "番路鄉"
             },
@@ -880,8 +866,7 @@ const  taiwan_districts=[
         "name": "嘉義縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "630",
                 "name": "斗南鎮"
             },
@@ -965,8 +950,7 @@ const  taiwan_districts=[
         "name": "雲林縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "700",
                 "name": "中西區"
             },
@@ -1118,8 +1102,7 @@ const  taiwan_districts=[
         "name": "臺南市"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "800",
                 "name": "新興區"
             },
@@ -1354,8 +1337,7 @@ const  taiwan_districts=[
     //     "name": "金門縣"
     // },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "900",
                 "name": "屏東市"
             },
@@ -1491,8 +1473,7 @@ const  taiwan_districts=[
         "name": "屏東縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "950",
                 "name": "臺東市"
             },
@@ -1560,8 +1541,7 @@ const  taiwan_districts=[
         "name": "臺東縣"
     },
     {
-        "districts": [
-            {
+        "districts": [{
                 "zip": "970",
                 "name": "花蓮市"
             },
@@ -1617,10 +1597,11 @@ const  taiwan_districts=[
         "name": "花蓮縣"
     }
 ];
-Vue.component('cartItem',{
-    data(){return{
-    }},
-    template:`<div class="cart-item row">
+Vue.component('cartItem', {
+    data() {
+        return {}
+    },
+    template: `<div class="cart-item row">
                 <input type="hidden" :name="product.ID" :value='itemvalue'>
                 <div class="item_img col-sm-2 col-3">
                     <img :src="product.IMG" alt="">
@@ -1638,17 +1619,16 @@ Vue.component('cartItem',{
                 </div>
             </div>`,
     props: ['product'],
-    methods:{
-    },
-    computed:{
-        calamount(){
-           return this.product.PRICE* this.product.NUM;
+    methods: {},
+    computed: {
+        calamount() {
+            return this.product.PRICE * this.product.NUM;
         },
-        itemvalue(){
-            return this.product.ID+','+this.product.NUM;
+        itemvalue() {
+            return this.product.ID + ',' + this.product.NUM;
         }
     },
- 
+
 });
 
 Vue.component('product-card', {
@@ -1686,12 +1666,12 @@ Vue.component('product-card', {
     `,
     methods: {
         addpriceproduct() {
-            app.GiftWithPurchase=this.product;
-            app.GiftWithPurchase.NUM='1';
-            app.showGiftWithPurchaseList=false;
+            app.GiftWithPurchase = this.product;
+            app.GiftWithPurchase.NUM = '1';
+            app.showGiftWithPurchaseList = false;
         }
 
-         
+
     },
     computed: {
         hiddenValue() {
@@ -1700,8 +1680,7 @@ Vue.component('product-card', {
             return value;
         },
     },
-    watch: {
-    }
+    watch: {}
 });
 
 
@@ -1711,258 +1690,333 @@ const app = new Vue({
         return {
             addItemList: [],
             addItems: [],
-            notice:false,
-            total:0,
-            addpriceproduct:null,
-            allGiftWithPurchase:null,
-            itemList:null,
+            notice: false,
+            total: 0,
+            addpriceproduct: null,
+            allGiftWithPurchase: null,
+            itemList: null,
             cartShow: false,
-            GiftWithPurchase:null,
-            showGiftWithPurchaseList:true,
-            discount:0,
-            discountLB:false,
-            discountText:null,
-            itemsSize:0,
-            taiwan_districts:null,
-            district:'',
-            area:'',
-            sName:'',
-            sPhone:'',
-            sAdd:'',
-            rName:'',
-            rPhone:'',
-            rAdd:'',
+            GiftWithPurchase: null,
+            showGiftWithPurchaseList: true,
+            discount: 0,
+            discountLB: false,
+            discountText: null,
+            itemsSize: 0,
+            taiwan_districts: null,
+            district: '',
+            area: '',
+            sName: '',
+            sPhone: '',
+            sAdd: '',
+            rName: '',
+            rPhone: '',
+            rAdd: '',
         }
     },
     created() {
         if (storage['addItemList']) {
-            let l=storage['addItemList'].split(',');
+            let l = storage['addItemList'].split(',');
             l.pop();
             this.addItemList = l;
             this.itemList = storage['addItemList'];
-            let Allproducts=[];
-            for(let i in l){
-                let info=storage[l[i]].split('|'),
-                obj={
-                    ID:info[0],NAME:info[1],IMG:info[2],SIZE:info[3],PRICE:info[4],NUM:info[5]
-                };
+            let Allproducts = [];
+            for (let i in l) {
+                let info = storage[l[i]].split('|'),
+                    obj = {
+                        ID: info[0],
+                        NAME: info[1],
+                        IMG: info[2],
+                        SIZE: info[3],
+                        PRICE: info[4],
+                        NUM: info[5]
+                    };
                 Allproducts.push(obj);
             }
-            this.addItems=Allproducts;
+            this.addItems = Allproducts;
         } else {
             storage['addItemList'] = '';
         };
-        if(storage['addpriceproduct']){
-            let info=storage['addpriceproduct'].split('|');
-            this.addpriceproduct={
-                ID:info[0],NAME:info[1],IMG:info[2],SIZE:info[3],PRICE:info[4],NUM:info[5]
+        if (storage['addpriceproduct']) {
+            let info = storage['addpriceproduct'].split('|');
+            this.addpriceproduct = {
+                ID: info[0],
+                NAME: info[1],
+                IMG: info[2],
+                SIZE: info[3],
+                PRICE: info[4],
+                NUM: info[5]
             };
         };
-       this.taiwan_districts=taiwan_districts;
+        this.taiwan_districts = taiwan_districts;
 
-       if(storage['sName']){this.sName=storage['sName'];}
-       if(storage['sPhone']){this.sPhone=storage['sPhone'];}
-       if(storage['sAdd']){this.sAdd=storage['sAdd'];}
-       if(storage['rName']){this.rName=storage['rName'];}
-       if(storage['rPhone']){this.rPhone=storage['rPhone'];}
-       if(storage['rAdd']){this.rAdd=storage['rAdd'];}
-       if(storage['district']){this.district=storage['district'];}
-       if(storage['area']){this.area=storage['area'];}
+        if (storage['sName']) { this.sName = storage['sName']; }
+        if (storage['sPhone']) { this.sPhone = storage['sPhone']; }
+        if (storage['sAdd']) { this.sAdd = storage['sAdd']; }
+        if (storage['rName']) { this.rName = storage['rName']; }
+        if (storage['rPhone']) { this.rPhone = storage['rPhone']; }
+        if (storage['rAdd']) { this.rAdd = storage['rAdd']; }
+        if (storage['district']) { this.district = storage['district']; }
+        if (storage['area']) { this.area = storage['area']; }
     },
     mounted() {
-      window.addEventListener('beforeunload',function(){
+
+        window.addEventListener('beforeunload', function() {
             storage.removeItem('addpriceproduct');
-      })
-        let total=0;
-        let size=0;
+        })
+        let total = 0;
+        let size = 0;
         for (let i in this.$refs.items) {
-            const item=this.$refs.items[i];
-            total+=item.calamount;
-            size+= item.product.SIZE*item.product.NUM;
+            const item = this.$refs.items[i];
+            total += item.calamount;
+            size += item.product.SIZE * item.product.NUM;
         };
-        if(this.addpriceproduct){
-            this.total= total+this.$refs.addpriceproduct.calamount;
-            this.itemsSize=parseInt(size)+parseInt(this.$refs.addpriceproduct.product.SIZE);
-        }else{
-            this.total= total;
-            this.itemsSize=size;
+        if (this.addpriceproduct) {
+            this.total = total + this.$refs.addpriceproduct.calamount;
+            this.itemsSize = parseInt(size) + parseInt(this.$refs.addpriceproduct.product.SIZE);
+        } else {
+            this.total = total;
+            this.itemsSize = size;
         };
-        let params = new URLSearchParams();
-        params.append('total', this.total);
-        axios
-        .post('./phps/getgwp.php', params).then(function(res) {
-            let data=res.data;
-            app.allGiftWithPurchase=data;
-            app.$nextTick(function(){
-                if(app.allGiftWithPurchase.length>2){
-                        $('#gwp').slick({
-                            arrows: true,
-                            // infinite: true,
-                            slidesToScroll: 3,
-                            slidesToShow: 3,
-                            responsive: [
-                                {
+        //靜態網頁用data開始
+        this.allGiftWithPurchase = [{ "ID": "GWP1", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包1", "PRICE": "0", "SIZE": "1" }, { "ID": "GWP4", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包4", "PRICE": "0", "SIZE": "1" }, { "ID": "GWP5", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包5", "PRICE": "0", "SIZE": "1" }];
+        this.$nextTick(function() {
+                if (this.allGiftWithPurchase.length > 2) {
+                    $('#gwp').slick({
+                        arrows: true,
+                        // infinite: true,
+                        slidesToScroll: 3,
+                        slidesToShow: 3,
+                        responsive: [{
                                 breakpoint: 600,
                                 settings: {
-                                // centerMode: true,
-                                slidesToScroll: 2,
-                                slidesToShow: 2,
+                                    // centerMode: true,
+                                    slidesToScroll: 2,
+                                    slidesToShow: 2,
                                 }
                             },
-                                {
+                            {
                                 breakpoint: 350,
                                 settings: {
-                                // centerMode: true,
-                                slidesToScroll: 1,
-                                slidesToShow: 1,
+                                    // centerMode: true,
+                                    slidesToScroll: 1,
+                                    slidesToShow: 1,
                                 }
                             },
-                            ]
-                        });
+                        ]
+                    });
                 }
+                document.getElementById('loading').style.display = 'none';
             })
-            document.getElementById('loading').style.display='none';
-        }).catch((error) => { console.error(error) });
+            //靜態網頁用data結束
+
+        // let params = new URLSearchParams();
+        // params.append('total', this.total);
+        // axios
+        // .post('./phps/getgwp.php', params).then(function(res) {
+        //     let data=res.data;
+        //     app.allGiftWithPurchase=data;
+        //     app.$nextTick(function(){
+        //         if(app.allGiftWithPurchase.length>2){
+        //                 $('#gwp').slick({
+        //                     arrows: true,
+        //                     // infinite: true,
+        //                     slidesToScroll: 3,
+        //                     slidesToShow: 3,
+        //                     responsive: [
+        //                         {
+        //                         breakpoint: 600,
+        //                         settings: {
+        //                         // centerMode: true,
+        //                         slidesToScroll: 2,
+        //                         slidesToShow: 2,
+        //                         }
+        //                     },
+        //                         {
+        //                         breakpoint: 350,
+        //                         settings: {
+        //                         // centerMode: true,
+        //                         slidesToScroll: 1,
+        //                         slidesToShow: 1,
+        //                         }
+        //                     },
+        //                     ]
+        //                 });
+        //         }
+        //     })
+        //     document.getElementById('loading').style.display='none';
+        // }).catch((error) => { console.error(error) });
     },
     methods: {
-        checkout(){
-                let product = this.addpriceproduct;
-                if(product){
-                    let value = product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.PRICE + '|1';
-                    storage['addpriceproduct'] = value;
-                }
+        checkout() {
+            let product = this.addpriceproduct;
+            if (product) {
+                let value = product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.PRICE + '|1';
+                storage['addpriceproduct'] = value;
+            }
 
         },
         submitForm() {
-            function check(){
-                if(document.orderform.sName.value==''){alert('訂購人姓名未填');
-                return false;}
-                if(document.orderform.sPhone.value==''){alert('訂購人電話未填');
-                return false;}
-                if(document.orderform.sAdd.value==''){alert('訂購人地址未填');
-                return false;}
-                if(document.orderform.rName.value==''){alert('收件人姓名未填');
-                return false;}
-                if(document.orderform.rPhone.value==''){alert('收件人電話未填');
-                return false;}
-                if(document.orderform.rAdd.value==''){alert('收件人地址未填');
-                return false;}
-                if(document.orderform.rAdd.value==''){alert('收件人地址未填');
-                return false;}
-                if(document.orderform.district.value==''){alert('未選擇縣市');
-                return false;}
-                if(document.orderform.area.value==''){alert('未選擇地區');
-                return false;}
+            function check() {
+                if (document.orderform.sName.value == '') {
+                    alert('訂購人姓名未填');
+                    return false;
+                }
+                if (document.orderform.sPhone.value == '') {
+                    alert('訂購人電話未填');
+                    return false;
+                }
+                if (document.orderform.sAdd.value == '') {
+                    alert('訂購人地址未填');
+                    return false;
+                }
+                if (document.orderform.rName.value == '') {
+                    alert('收件人姓名未填');
+                    return false;
+                }
+                if (document.orderform.rPhone.value == '') {
+                    alert('收件人電話未填');
+                    return false;
+                }
+                if (document.orderform.rAdd.value == '') {
+                    alert('收件人地址未填');
+                    return false;
+                }
+                if (document.orderform.rAdd.value == '') {
+                    alert('收件人地址未填');
+                    return false;
+                }
+                if (document.orderform.district.value == '') {
+                    alert('未選擇縣市');
+                    return false;
+                }
+                if (document.orderform.area.value == '') {
+                    alert('未選擇地區');
+                    return false;
+                }
                 return true;
             };
             if (storage['addItemList'] == '') {
                 alert('您的購物車內沒有物品，請選擇商品後再結帳，謝謝。');
 
-            }else{
-                if(check()){ 
-                        if (confirm('是否確認提交？')) {
-                            // for (let i in this.addItemList) {
-                            //     storage.removeItem(this.addItemList[i]);
-                            // }
-                            // storage.removeItem('addItemList');
-                            // storage.removeItem('addpriceproduct');
-                           document.orderform.submit();
-                        }
-                    
+            } else {
+                if (check()) {
+                    if (confirm('是否確認提交？')) {
+                        // for (let i in this.addItemList) {
+                        //     storage.removeItem(this.addItemList[i]);
+                        // }
+                        // storage.removeItem('addItemList');
+                        // storage.removeItem('addpriceproduct');
+                        document.orderform.submit();
+                    }
+
                 }
             }
         },
-        changeGWP(){
-            this.GiftWithPurchase=null;
-            this.showGiftWithPurchaseList=true;
+        changeGWP() {
+            this.GiftWithPurchase = null;
+            this.showGiftWithPurchaseList = true;
         },
-        checkcoupon(){
-            let params = new URLSearchParams();
-                params.append('text', this.discountText);
-            axios
-            .post('./phps/getcoupon.php', params).then(function(res) {
-                let data=res.data;
-                if(data!=''){
-                    app.discount=data;
-                    app.discountLB=false;
-                }else{
-                    alert('折價代碼錯誤');
-                    app.discount=0;
-                }
-            }).catch((error) => { console.error(error) });
-            
+        checkcoupon() {
+            //靜態網頁用data開始
+            if (this.discountText == 'hihi') {
+                this.discount = 200;
+                this.discountLB = false;
+            } else {
+                alert('折價代碼錯誤');
+                this.discount = 0;
+            };
+            //靜態網頁用data結束
+
+            // let params = new URLSearchParams();
+            // params.append('text', this.discountText);
+            // axios
+            //     .post('./phps/getcoupon.php', params).then(function(res) {
+            //         let data = res.data;
+            //         if (data != '') {
+            //             app.discount = data;
+            //             app.discountLB = false;
+            //         } else {
+            //             alert('折價代碼錯誤');
+            //             app.discount = 0;
+            //         }
+            //     }).catch((error) => { console.error(error) });
+
         },
-        saveInfo(e){
-            if(e.target.value==''){
+        saveInfo(e) {
+            if (e.target.value == '') {
                 storage.removeItem(e.target.name);
-            }else{
-                storage[e.target.name]=e.target.value;
-                if(e.target.name=='district'){
-                    this.area='';
+            } else {
+                storage[e.target.name] = e.target.value;
+                if (e.target.name == 'district') {
+                    this.area = '';
                 }
-                if(e.target.name=='sPhone'){
-                    let reg=/(^\d{2,3}\-\d{7,8}$)|(^09\d{8})$/;
-                    if(!reg.test(e.target.value)){
+                if (e.target.name == 'sPhone') {
+                    let reg = /(^\d{2,3}\-\d{7,8}$)|(^09\d{8})$/;
+                    if (!reg.test(e.target.value)) {
                         alert('寄件人號碼格式錯誤，請重新輸入');
-                        document.orderform.sPhone.value='';
+                        document.orderform.sPhone.value = '';
                         storage.removeItem('sPhone');
                     }
                 }
-                if(e.target.name=='rPhone'){
-                    let reg=/(^\d{2,3}\-\d{7,8}$)|(^09\d{8})$/;
-                    if(!reg.test(e.target.value)){
+                if (e.target.name == 'rPhone') {
+                    let reg = /(^\d{2,3}\-\d{7,8}$)|(^09\d{8})$/;
+                    if (!reg.test(e.target.value)) {
                         alert('收件人號碼格式錯誤，請重新輸入');
-                        document.orderform.rPhone.value='';
+                        document.orderform.rPhone.value = '';
                         storage.removeItem('rPhone');
                     }
                 }
             }
         },
-        syncinfo(){
-            this.rName=this.sName;
-            this.rPhone=this.sPhone;
-            this.rAdd=this.sAdd;
+        syncinfo() {
+            this.rName = this.sName;
+            if (this.sName == '') {
+                storage.removeItem('rName');
+            } else { storage['rName'] = this.rName }
+            this.rPhone = this.sPhone;
+            if (this.sPhone == '') {
+                storage.removeItem('rPhone');
+            } else { storage['rPhone'] = this.rPhone }
+            this.rAdd = this.sAdd;
+            if (this.sAdd == '') {
+                storage.removeItem('rAdd');
+            } else { storage['rAdd'] = this.rAdd }
         },
     },
-    computed: {   
-        calAll(){
-            if(this.addpriceproduct){
-                return parseInt(this.total)+parseInt(this.addpriceproduct.PRICE);
-            }else{
+    computed: {
+        calAll() {
+            if (this.addpriceproduct) {
+                return parseInt(this.total) + parseInt(this.addpriceproduct.PRICE);
+            } else {
                 return this.total
             }
         },
-        calDeliveryFee(){
-            //暫時
-            let fee=0,
-                boxsize=8;
-            fee += parseInt(this.itemsSize / boxsize)*150;
+        calDeliveryFee() {
+            // 運費計算 暫時
+            let fee = 0,
+                boxsize = 8;
+            fee += parseInt(this.itemsSize / boxsize) * 150;
             fee += (this.itemsSize % boxsize > 0) ? 150 : 0;
             return fee;
         },
-       
-        selecteddistrict(){
-            if(this.district===''){
+
+        selecteddistrict() {
+            if (this.district === '') {
                 return [''];
-            }else{
-                return taiwan_districts[this.district].districts.map(x=>x.name);
+            } else {
+                return taiwan_districts[this.district].districts.map(x => x.name);
             }
         },
-        zip(){
+        zip() {
             return taiwan_districts[this.district].districts[this.area].zip;
         }
-     
+
     },
     watch: {
-            // district(){
-            //     this.rAdd=taiwan_districts[this.district].name;
-            // },
-        area:function(){
-            if(this.rAdd==''&&this.area!=''){
-                this.rAdd=taiwan_districts[this.district].name+taiwan_districts[this.district].districts[this.area].name;
+        area: function() {
+            if (this.rAdd == '' && this.area != '') {
+                this.rAdd = taiwan_districts[this.district].name + taiwan_districts[this.district].districts[this.area].name;
             }
-            // this.rAdd=taiwan_districts[this.district].name;
-            // console.log('aa')
         }
     },
 

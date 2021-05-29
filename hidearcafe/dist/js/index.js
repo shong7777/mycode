@@ -400,7 +400,7 @@ const app = new Vue({
         },
         total: function() {
             if (this.total > 10000) {
-                app.addcartLBText = '親愛的貴客您好，由於訂單數量較大，請直接電洽專人為您服務，造成不便還請見諒。<br>電話：<a href="tel:+886-3-4751386">03-4751386<a/>';
+                app.addcartLBText = '親愛的顧客您好，由於此筆訂單數量較大，請直接電洽專人為您服務，造成不便還請見諒。<br>電話：<a href="tel:+886-3-4751386">03-4751386<a/>';
                 app.addcartLB = true;
             }
         },

@@ -3,7 +3,8 @@ const app = new Vue({
     el: "#app",
     data() {
         return {
-            addItems: [],
+            addItemList: [],
+            addItems: null,
             total: 0,
             cartShow: false,
             notice: false,
