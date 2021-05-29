@@ -1602,22 +1602,22 @@ Vue.component('cartItem', {
         return {}
     },
     template: `<div class="cart-item row">
-                <input type="hidden" :name="product.ID" :value='itemvalue'>
-                <div class="item_img col-sm-2 col-3">
-                    <img :src="product.IMG" alt="">
-                </div>
-                <div class='col-sm-10 col-9 pinfo row'>
-                    <div class='col-sm-5 col-12 pname'>
-                        <div >{{product.NAME}}</div>
+                    <input type="hidden" :name="product.ID" :value='itemvalue'>
+                    <div class="item_img col-sm-2 col-3">
+                        <img :src="product.IMG" alt="">
                     </div>
-                    <div class='col-sm-4 col-12'>
-                        <span>數量：{{product.NUM}}</span>
+                    <div class='col-sm-10 col-9 pinfo row'>
+                        <div class='col-sm-5 col-12 pname'>
+                            <div >{{product.NAME}}</div>
+                        </div>
+                        <div class='col-sm-4 col-12'>
+                            <span>數量：{{product.NUM}}</span>
+                        </div>
+                        <div class="item_price  col-sm-3 col-12">
+                            <span>單價:{{product.PRICE}}</span>
+                        </div>
                     </div>
-                    <div class="item_price  col-sm-3 col-12">
-                        <span>單價:{{product.PRICE}}</span>
-                    </div>
-                </div>
-            </div>`,
+                </div>`,
     props: ['product'],
     methods: {},
     computed: {
