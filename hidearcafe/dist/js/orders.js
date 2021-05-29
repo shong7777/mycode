@@ -8,13 +8,13 @@ Vue.component('cartItem', {
                     <img :src="product.IMG" alt="">
                 </div>
                 <div class='col-5  pname'>
-                    <span >{{product.NAME}}</span>
+                    <div>{{product.NAME}}</div>
                 </div>
                 <div class='col-2 '>
-                    <span>數量：{{product.QUANTITY}}</span>
+                    <span>數量：</span><span>{{product.QUANTITY}}</span>
                 </div>
                 <div class="item_price  col-3 ">
-                    <span>單價:{{product.PRICE}}</span>
+                    <span>單價:</span><span>{{product.PRICE}}</span>
                 </div>
             </div>`,
     props: ['product'],
