@@ -4,16 +4,16 @@ Vue.component('cartItem', {
         return {}
     },
     template: `<div class="cart-item row">
-                <div class="item_img col-sm-2 col-12">
+                <div class="item_img col-2 ">
                     <img :src="product.IMG" alt="">
                 </div>
-                <div class='col-sm-5 col-12 pname'>
+                <div class='col-5  pname'>
                     <span >{{product.NAME}}</span>
                 </div>
-                <div class='col-sm-2 col-12'>
+                <div class='col-2 '>
                     <span>數量：{{product.QUANTITY}}</span>
                 </div>
-                <div class="item_price  col-sm-3 col-12">
+                <div class="item_price  col-3 ">
                     <span>單價:{{product.PRICE}}</span>
                 </div>
             </div>`,

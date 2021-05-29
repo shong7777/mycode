@@ -1901,11 +1901,12 @@ const app = new Vue({
             } else {
                 if (check()) {
                     if (confirm('是否確認提交？')) {
-                        // for (let i in this.addItemList) {
-                        //     storage.removeItem(this.addItemList[i]);
-                        // }
-                        // storage.removeItem('addItemList');
-                        // storage.removeItem('addpriceproduct');
+                        for (let i in this.addItemList) {
+                            storage.removeItem(this.addItemList[i]);
+                        }
+                        storage.removeItem('addItemList');
+                        storage.removeItem('addpriceproduct');
+
                         // document.orderform.submit();
                         location.href = './orders.html?orders_no=3'
                     }
