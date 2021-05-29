@@ -133,7 +133,7 @@
                                 <option value="">請選擇地區</option>
                                 <option :value="i" v-for='(area,i) in selecteddistrict'>{{area}}</option>
                             </select>
-                            <span>郵遞區號：<input type="text" :value='zip' name='zipcode' id='zipcode' v-if='area!==""'></span>
+                            <span id='zip'>郵遞區號：<input type="text" :value='zip' name='zipcode' id='zipcode' v-if='area!==""'></span>
                         </div>
                         <input type="text" name="rAdd" id="rAdd" placeholder="收件人地址" @change='saveInfo' v-model='rAdd'>
                     </div>
