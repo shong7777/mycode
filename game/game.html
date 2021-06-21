@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: rgb(195 255 197 / 50%);
+        }
+        
+        #text {
+            color: cornflowerblue;
+            text-align: center;
+            max-width: 250px;
+        }
+        
+        table {
+            margin: 0 auto;
+            padding: 5px;
+        }
+        
+        #game td {
+            cursor: pointer;
+            background-image: url('./img/leaf.svg');
+            background-repeat: no-repeat;
+            width: 80px;
+            height: 80px;
+        }
+        
+        td>img {
+            width: 80%;
+            height: 80%;
+        }
+        
+        #button {
+            text-align: center;
+        }
+        
+        #gameset {
+            margin: 0 auto;
+        }
+        
+        input[type=text],
+        input[type=number] {
+            width: 30px;
+        }
+        
+        #game {
+            margin-bottom: 100px;
+        }
+        
+        h4 {
+            margin: 5px;
+        }
+        
+        h2 {
+            color: cornflowerblue;
+        }
+    </style>
+</head>
+
+<body>
+    <table id="gameset">
+        <caption>
+            <h2>蟲蟲危機</h2>
+        </caption>
+        <footer>
+            <td colspan="2" id="text">
+                <h4>遊戲說明</h4>點擊"開始遊戲"按鈕，在下圖中隨機產生蟲蟲，蟲蟲逃跑前單擊蟲蟲打到牠，打倒一隻可獲得100積分，如果沒有打扣100積分。快來試試吧，考驗您的反應和眼力。
+            </td>
+        </footer>
+        <tr>
+            <td>遊戲時間：</td>
+            <td><input type="text" name="" value="20" id="gameTime">秒</td>
+        </tr>
+        <tr>
+            <td>出現間隔：</td>
+            <td><input type="text" name="" value="2" id="spaceTime">秒</td>
+        </tr>
+        <tr>
+            <td>出現隻數(最大):</td>
+            <td><input type="number" value="3" name="" id="num">隻</td>
+        </tr>
+        <tr>
+            <td><br></td>
+        </tr>
+        <tr>
+            <td>倒數時間：</td>
+            <td><label id="lastTime">0</label>秒</td>
+        </tr>
+        <tr>
+            <td>得分情況：</td>
+            <td><label id="account">0</label>分</td>
+        </tr>
+        <tr>
+            <td colspan="2" id="button">
+                <br>
+                <input type="button" onclick="start()" id="startGame" value="開始遊戲">
+                <input type="button" onclick="stop()" id="overGame" disabled="true" value="退出遊戲">
+            </td>
+        </tr>
+    </table>
+    <table id="game">
+        <tr>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+        </tr>
+
+        <tr>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+        </tr>
+
+        <tr>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+        </tr>
+
+        <tr>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+        </tr>
+
+        <tr>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+            <td><img src=""></td>
+        </tr>
+    </table>
+    <!-- <audio id="audio" loop="loop" src="img/sound.mp3"></audio> -->
+
+    <script type="text/javascript">
+        //1 先獲取到所有的坑(圖片)
+        let game = document.getElementById('game'),
+            image = game.getElementsByTagName('img'),
+            startGame = document.getElementById("startGame"),
+            gameTime = document.getElementById("gameTime"),
+            num = document.getElementById("num"),
+            overGame = document.getElementById("overGame"),
+            lastTime = document.getElementById("lastTime"),
+            spaceTime = document.getElementById("spaceTime"),
+            setspaceTime,
+            numvalue,
+            totalnum,
+            time,
+            settime,
+            score,
+            timervalue,
+            account = document.getElementById("account"),
+            //設定計時器序列
+            appeartimer = [];
+
+        for (var i = 0; i < 25; i++) {
+            //阻止圖片拖曳效果
+            image[i].setAttribute("draggable", "false");
+            //設定圖片路徑
+            image[i].src = "./img/space.svg";
+        }
+        //開始按鈕事件
+        function start() {
+            //分數歸零
+            score = 0;
+            totalnum = 0;
+            //播放音效
+            // document.getElementById('audio').play();
+            //遍歷每個圖片失敗事件
+            for (var i = 0; i < 25; i++) {
+
+                image[i].setAttribute("draggable", "false");
+            }
+            //鎖定input欄位
+            startGame.setAttribute("disabled", true);
+            spaceTime.setAttribute("disabled", true);
+            gameTime.setAttribute("disabled", true);
+            num.setAttribute("disabled", true);
+            overGame.removeAttribute("disabled");
+            //獲取遊戲總時間秒數
+            time = Number(gameTime.value);
+            timervalue = time;
+
+            settime = gameTime.value;
+            numvalue = Number(document.getElementById('num').value);
+            spaceTimeValue = Number(spaceTime.value) * 1000;
+            setspaceTime = Number(spaceTime.value);
+            //開始倒計時
+            timer();
+            settimer();
+        }
+
+
+        //倒數計時事件
+        function timer() {
+            if (time <= 0) {
+                //倒計時結束停止遊戲
+                stop();
+            } else {
+                //每次遞減每秒遞歸執行輸出顯示
+                lastTime.innerText = timervalue;
+                timervalue--;
+                timers = setTimeout(function() {
+                    timer();
+                }, 1000);
+            }
+        }
+        //設定事件計時器
+        function settimer() {
+            if (time <= 0) {
+                //倒計時結束停止遊戲
+                stop();
+            } else {
+                //每次遞減每秒遞歸執行輸出顯示
+                time -= spaceTimeValue / 1000;
+                appear();
+                t = setTimeout(function() {
+                    settimer()
+                }, spaceTimeValue);
+            }
+
+        }
+        //讓蟲蟲隨機出現
+        function appear() {
+            for (var i = 0; i < 25; i++) {
+                image[i].src = "./img/space.svg";
+                image[i].setAttribute("onclick", "fail()");
+            }
+            //根據隻數判斷隨機出現位置
+            for (let i = 0; i < numvalue; i++) {
+                let r = Math.floor(Math.random() * 25);
+                image[r].src = "./img/caterpillar.svg";
+                //刪除fail事件
+                image[r].removeAttribute("onclick", "fail()");
+                //增加catch事件
+                image[r].setAttribute("onclick", `get(${r},${i})`);
+                appeartimer[i] = setTimeout(function() {
+                    score -= 100;
+                    account.innerText = score;
+                    image[r].src = "./img/space.svg";
+                    image[r].removeAttribute("onclick", "get()");
+                    image[r].setAttribute("onclick", "fail()");
+                }, spaceTimeValue)
+            }
+        }
+        //成功事件
+        function get(r, i) {
+            score += 100;
+            account.innerText = score;
+            totalnum++;
+            image[r].src = "img/beatcaterpillar.svg";
+            image[r].removeAttribute("onclick", "get()");
+            //停止失敗計時
+            clearTimeout(appeartimer[i]);
+        }
+        //失敗事件
+        function fail() {
+            score -= 100
+            account.innerText = score;
+        }
+
+        function stop() {
+            //暫停音效
+            // document.getElementById('audio').pause();
+            alert(`打倒了${totalnum}隻蟲蟲。總共獲得${score}分。`);
+            //清除所有計時器
+            clearTimeout(t);
+            clearTimeout(timers);
+            for (let i in appeartimer) {
+                clearTimeout(appeartimer[i]);
+            }
+            //啓用控件狀態
+            spaceTime.value = setspaceTime;
+            gameTime.value = settime;
+            lastTime.innerText = settime;
+            account.innerText = "0";
+            startGame.removeAttribute("disabled");
+            num.removeAttribute("disabled");
+            spaceTime.removeAttribute("disabled");
+            gameTime.removeAttribute("disabled");
+            overGame.setAttribute("disabled", true);
+            //初始化所有圖片事件
+            for (var i = 0; i < 25; i++) {
+                image[i].removeAttribute("onclick", "fail()");
+                image[i].removeAttribute("onclick", "get()");
+                image[i].src = "./img/space.svg";
+            }
+        }
+    </script>
+</body>
+
+</html>

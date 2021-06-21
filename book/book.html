@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .perspective {
+            -webkit-perspective: 1000px;
+            perspective: 1000px;
+            -webkit-perspective-origin: 50% 50%;
+            perspective-origin: 50% 50%;
+            margin: 0 auto;
+            width: max-content;
+            height: 350px;
+            margin-top: 100px;
+        }
+        
+        .book {
+            transform-style: preserve-3d;
+            position: relative;
+            display: flex;
+            margin-top: 30px;
+            transform: rotatex(0deg) rotateY(175deg);
+            transform: rotatex(0deg) rotateY(5deg);
+            transition: 2.5s;
+            /* 設定書的寬高 */
+            --book-width: 200px;
+            --book-height: 300px;
+            --book-angle: 90deg;
+            /* 設定書的顏色 */
+            --book-color: #2e1800;
+            --book-shadow-color: #635648;
+            --book-shadow-color2: #221b14;
+        }
+        
+        .book div {
+            transform-style: preserve-3d;
+        }
+        /* 
+        div.book_front {
+            transform-style: flat;
+        } */
+        
+        .book_front,
+        .book_back,
+        .book_aside,
+        .page_aside {
+            position: relative;
+            height: var(--book-height);
+            background-color: var(--book-color);
+            box-shadow: inset 4px -4px 4px 1px var(--book-shadow-color), inset 7px -7px 4px 0 var(--book-shadow-color2);
+            border-radius: 5px;
+            transition: 2s;
+        }
+        
+        .page_aside {
+            height: calc(var(--book-height) - 10px);
+            margin-top: 5px;
+            width: 5px;
+            /* border: 3px solid red; */
+            transform: rotateY(90deg);
+            position: absolute;
+        }
+        
+        .book_front::after,
+        .book_back::after {
+            transform-style: preserve-3d;
+            content: '';
+            display: block;
+            height: var(--book-height);
+            background-color: #2e1800;
+            box-shadow: inset 4px -4px 4px 1px #635648, inset 7px -7px 4px 0 #221b14;
+            width: 100%;
+            position: absolute;
+            /* 書頁寬度 */
+            transform: translateZ(5px);
+            border-radius: 5px;
+        }
+        
+        .book_front .page_aside {
+            transform-origin: right;
+            left: 0;
+        }
+        
+        .book_back .page_aside {
+            right: 0;
+            transform-origin: right;
+        }
+        
+        .page_aside::before {
+            transform-style: preserve-3d;
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            background-color: #2e1800;
+            box-shadow: inset 4px -4px 4px 1px #635648, inset 7px -7px 4px 0 #221b14;
+            position: absolute;
+            top: -3px;
+            transform: rotateX(-9deg);
+        }
+        
+        .page_aside::after {
+            transform-style: preserve-3d;
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            background-color: #2e1800;
+            box-shadow: inset 4px -4px 4px 1px #635648, inset 7px -7px 4px 0 #221b14;
+            position: absolute;
+            bottom: -3px;
+            transform: rotateX(-34deg);
+        }
+        
+        .book_front,
+        .book_back {
+            min-width: var(--book-width);
+        }
+        
+        .book_front {
+            transform: rotateY(var(--book-angle));
+            transform-origin: right;
+        }
+        
+        .book_back {
+            transform: rotateY(calc(var(--book-angle)*-1));
+            transform-origin: left;
+        }
+        
+        .book_aside {
+            width: calc(var(--book-width)/4);
+        }
+        
+        .page {
+            position: absolute;
+            width: calc(var(--book-width)*.95);
+            height: calc(var(--book-height)*.9);
+            margin-top: calc(var(--book-height)*.05);
+            background-color: #fff;
+            /* transform: rotateY(var(--page-angle)) translate3d(-5px, 0px, -10px); */
+            transform-origin: left;
+            box-shadow: inset 0 0 26px 2px #d8cccc, -1px 1px 13px 0 rgba(34, 27, 20, .81);
+            transition: 2s;
+        }
+        
+        .page_left {
+            --page-angle: -90deg;
+            --page-angle-next: 0deg;
+            --translateX: 1px;
+            --translateX-next: -0px;
+            --translateZ: -6px;
+            --translateZ-next: -2.5px;
+        }
+        
+        .page_right {
+            --page-angle: 150deg;
+            --page-angle-next: -5deg;
+            --page-angle: 90deg;
+            --page-angle-next: -0deg;
+            --translateX: -1px;
+            --translateX-next: 0px;
+            --translateZ: -6px;
+            --translateZ-next: -2.5px;
+        }
+        
+        .page_right .page {
+            transform-origin: right;
+            right: 0;
+        }
+        
+        .page_1 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*0)) translate3d(calc(var(--translateX) + var(--translateX-next)*0), 0px, calc(var(--translateZ) + var(--translateZ-next)*0));
+        }
+        
+        .page_2 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*1)) translate3d(calc(var(--translateX) + var(--translateX-next)*1), 0px, calc(var(--translateZ) + var(--translateZ-next)*1));
+        }
+        
+        .page_3 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*2)) translate3d(calc(var(--translateX) + var(--translateX-next)*2), 0px, calc(var(--translateZ) + var(--translateZ-next)*2));
+        }
+        
+        .page_4 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*3)) translate3d(calc(var(--translateX) + var(--translateX-next)*3), 0px, calc(var(--translateZ) + var(--translateZ-next)*3));
+        }
+        
+        .page_5 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*4)) translate3d(calc(var(--translateX) + var(--translateX-next)*4), 0px, calc(var(--translateZ) + var(--translateZ-next)*4));
+        }
+        
+        .page_6 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*5)) translate3d(calc(var(--translateX) + var(--translateX-next)*5), 0px, calc(var(--translateZ) + var(--translateZ-next)*5));
+        }
+        
+        .page_7 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*6)) translate3d(calc(var(--translateX) + var(--translateX-next)*6), 0px, calc(var(--translateZ) + var(--translateZ-next)*6));
+        }
+        
+        .page_8 {
+            transform: rotateY(calc(var(--page-angle) + var(--page-angle-next)*7)) translate3d(calc(var(--translateX) + var(--translateX-next)*7), 0px, calc(var(--translateZ) + var(--translateZ-next)*7));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="perspective">
+
+        <div class="book" id="book">
+            <div class="book_front">
+                <div class="page_aside"></div>
+            </div>
+            <div class="book_aside">
+                <div class="page_left" id="page_left">
+                    <div class="page page_1"></div>
+                    <div class="page page_2"></div>
+                    <div class="page page_3"></div>
+                    <div class="page page_4"></div>
+                    <div class="page page_5"></div>
+                    <div class="page page_6"></div>
+                    <div class="page page_7"></div>
+                    <div class="page page_8"></div>
+                </div>
+                <div class="page_right" id="page_right">
+                    <div class="page page_1"></div>
+                    <div class="page page_2"></div>
+                    <div class="page page_3"></div>
+                    <div class="page page_4"></div>
+                    <div class="page page_5"></div>
+                    <div class="page page_6"></div>
+                    <div class="page page_7"></div>
+                    <div class="page page_8"></div>
+                </div>
+            </div>
+            <div class="book_back">
+                <div class="page_aside"></div>
+            </div>
+        </div>
+    </div>
+    <div>
+
+        <input type="button" value="turn180" id="turnbbtn">
+        <input type="button" value="turn5" id="turnfbtn">
+        <input type="button" value="turndown" id="turndownbtn">
+        <input type="button" value="open" id="openbtn">
+        <input type="button" value="close" id="closebtn">
+    </div>
+    <script>
+        let book = document.getElementById('book'),
+            page_left = document.getElementById('page_left'),
+            turnbbtn = document.getElementById('turnbbtn'),
+            turnfbtn = document.getElementById('turnfbtn'),
+            turndownbtn = document.getElementById('turndownbtn'),
+            openbtn = document.getElementById('openbtn'),
+            closebtn = document.getElementById('closebtn');
+        window.addEventListener('load', dofirst);
+
+        function dofirst() {
+            //轉後的按鈕程式
+            turnbbtn.addEventListener('click', function() {
+                    book.style.transform = 'rotatex(0deg) rotateY(180deg)';
+                    document.getElementsByClassName('book_front')[0].style.transformStyle =
+                        'preserve-3d';
+                })
+                //轉前的按鈕程式
+            turnfbtn.addEventListener('click', function() {
+                    book.style.transform = 'rotatex(0deg) rotateY(5deg)';
+                    document.getElementsByClassName('book_front')[0].style.transformStyle =
+                        'preserve-3d';
+                })
+                //向下轉的按鈕程式
+            turndownbtn.addEventListener('click', function() {
+                    book.style.transform = 'rotatex(75deg) rotateY(10deg)';
+                    document.getElementsByClassName('book_front')[0].style.transformStyle =
+                        'preserve-3d';
+                })
+                //開啟書頁的按鈕程式
+            openbtn.addEventListener('click', function() {
+                    book.setAttribute("style", '--book-angle: 10deg;');
+                    page_left.setAttribute("style",
+                        ' --page-angle: -160deg;--page-angle-next: 8deg;--translateZ-next: -3px;--translateX-next: 1px;--translateX: 0px;'
+                    );
+
+                    page_right.setAttribute("style",
+                        '--page-angle: 160deg;--page-angle-next: -8deg;--translateZ-next: -3px;--translateX-next: -1px;--translateX: 0px;'
+                    );
+                    setTimeout(function() {
+                        document.getElementsByClassName('book_front')[0].style.transformStyle =
+                            'preserve-3d';
+                    }, 100)
+                    setTimeout(function() {
+                        page_left.setAttribute("style",
+                            ' --page-angle: -170deg;--page-angle-next: 1deg;--translateZ-next: -1.5px;--translateX-next: -3px;--translateX: 0px;'
+                        );
+
+                        page_right.setAttribute("style",
+                            '--page-angle: 170deg;--page-angle-next: -1deg;--translateZ-next: -1.5px;--translateX-next: 3px;--translateX: 0px;'
+                        );
+                    }, 1000)
+                })
+                //關閉書頁的按鈕程式
+            closebtn.addEventListener('click', function() {
+                setTimeout(function() {
+                    document.getElementsByClassName('book_front')[0].style.transformStyle =
+                        'flat';
+                }, 1000)
+
+                book.setAttribute("style", '--book-angle: 90deg;');
+                page_left.setAttribute("style", '--page-angle: -90deg;');
+                page_right.setAttribute("style", '--page-angle: 90deg;');
+                book.style.transform = 'rotatex(0deg) rotateY(180deg)';
+
+            })
+        }
+    </script>
+</body>
+
+</html>
