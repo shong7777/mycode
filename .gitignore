@@ -1,3 +1,4 @@
 hidearcafe/src
 node_modules/
 hidearcafe/*.sql
+!.gitignore
