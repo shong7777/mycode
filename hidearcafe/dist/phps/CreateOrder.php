@@ -1,6 +1,5 @@
 <?php
-// $orderNo=$_GET['orders_no'];
-$orderNo=2;
+$orderNo=$_GET['orders_no'];
 header("Content-type:text/html;charset=utf-8");
 require_once("./connect.php");
 $sql = "select p.NAME, o.QUANTITY, p.PRICE,p.IMG from orders_list o join product p on o.P_ID=p.ID where o.ORDERS_NO = :orderNo;";
@@ -25,18 +24,19 @@ $orderP = $pdo->prepare($sql);
         $obj->HashIV      = 'v77hoKGq4kWxNNIS' ;                                          //測試用HashIV，請自行帶入ECPay提供的HashIV
         $obj->MerchantID  = '2000132';                                                    //測試用MerchantID，請自行帶入ECPay提供的MerchantID
         $obj->EncryptType = '1';                                                          //CheckMacValue加密類型，請固定填入1，使用SHA256加密
-        $obj->ClientBackURL = "http://localhost/hidearcafe/dist/orders.html?orders_no={$orderNo}";                                                       
+        $obj->ClientBackURL = "http://localhost/hidearcafe/dist/orders.html?orders_no=$orderNo";                                                       
 
 
         //基本參數(請依系統規劃自行調整)
-        $MerchantTradeNo = "Test".time() ;
-        $obj->Send['ReturnURL']         = "https://tibamef2e.com/ced101/personal/WD02017/FERRECKIE/receive.php" ;     //付款完成通知回傳的網址
+        $MerchantTradeNo = $orderNo.time() ;//測試用
+        // $MerchantTradeNo = $orderNo ;//實際用
+        $obj->Send['ReturnURL']         = "https://...../receive.php" ;     //付款完成通知回傳的網址
         $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;                           //訂單編號
         $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');                        //交易時間
         $obj->Send['TotalAmount']       = 4000;                                       //交易金額
         $obj->Send['TradeDesc']         = "小賣店交易" ;                           //交易描述
         $obj->Send['ChoosePayment']     = ECPay_PaymentMethod::ALL ;                  //付款方式:全功能
-        $obj->Send['ClientBackURL']     = 'http://localhost/hidearcafe/dist/orders.html?orders_no=3';       //付款完成後跳轉到訂單頁面
+        $obj->Send['ClientBackURL']     = "http://localhost/hidearcafe/dist/orders.html?orders_no=$orderNo";       //付款完成後跳轉到訂單頁面
 
 
         //訂單的商品資料
