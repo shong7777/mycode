@@ -1,5 +1,5 @@
 hidearcafe/src
+hidearcafe/dist/phps
 node_modules/
 hidearcafe/*.sql
-hidearcafe/phps/*.php
 !.gitignore
