@@ -9,7 +9,7 @@ Vue.component('cartItem', {
                 </div>
                 <div class='col-sm-10 col-9 pinfo row'>
                     <div class='col-sm-5 col-12 pname'>
-                        <span >{{product.NAME}}</span>
+                        <span  v-html='product.NAME'/>
                     </div>
                     <div class='col-sm-4 col-12'>
                     數量：<input type="number"  class="itemNum"  v-model="product.NUM" max='12' min='1'>
@@ -188,13 +188,10 @@ const app = new Vue({
         } else {
             storage['addItemList'] = '';
         };
-        this.allAddpriceproducts = [{ "ID": "ADD1", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容1", "NAME": "加價購DEMO 1", "ONSALE": "1", "PRICE": "500", "SIZE": "1" }, { "ID": "ADD2", "GRADE": "2", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容2", "NAME": "加價購DEMO 2", "ONSALE": "1", "PRICE": "350", "SIZE": "1" }, { "ID": "ADD3", "GRADE": "3", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容3", "NAME": "加價購DEMO 3", "ONSALE": "1", "PRICE": "200", "SIZE": "1" }, { "ID": "ADD4", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容4", "NAME": "加價購DEMO 4", "ONSALE": "1", "PRICE": "500", "SIZE": "1" }, { "ID": "ADD5", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容5", "NAME": "加價購DEMO 5", "ONSALE": "1", "PRICE": "500", "SIZE": "1" }, { "ID": "ADD6", "GRADE": "3", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容6", "NAME": "加價購DEMO 6", "ONSALE": "1", "PRICE": "200", "SIZE": "1" }, { "ID": "ADD7", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容7", "NAME": "加價購DEMO 7", "ONSALE": "1", "PRICE": "500", "SIZE": "1" }, { "ID": "ADD8", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "加價購商品內容商品內容商品內容商品內容商品內容商品內容商品內容商品內容7", "NAME": "加價購DEMO 7", "ONSALE": "1", "PRICE": "500", "SIZE": "1" }];
-        document.getElementById('loading').style.display = 'none';
-        // axios
-        //     .all([this.getAddPrice()]).then(axios.spread(function(Products) {
-        //         app.allAddpriceproducts = Products.data;
-        //         document.getElementById('loading').style.display = 'none';
-        //     }));
+        axios.all([this.getAddPrice()]).then(axios.spread(function(Products) {
+            app.allAddpriceproducts = Products.data;
+            document.getElementById('loading').style.display = 'none';
+        }));
     },
     mounted() {
 
@@ -227,19 +224,6 @@ const app = new Vue({
         changeaddprice() {
             this.addpriceproduct = null;
             this.showaddpriceproductsList = true;
-        },
-        reloadslick() {
-            console.log('change')
-                // if(this.addpriceproducts.length>3){
-            console.log('啟動slick')
-
-            //         $('#addpricelist').slick({
-            //             arrows: true,
-            //             // infinite: true,
-            //             slidesToScroll: 3,
-            //             slidesToShow: 3,
-            //             });
-            // }
         },
 
     },

@@ -16,7 +16,7 @@ Vue.component('cartItem', {
                     <img :src="product.IMG" alt="" loading="lazy">
                 </div>
                 <div class="item_info col-7 row">
-                    <span class=' col-12'>{{product.NAME}}</span>
+                    <span class=' col-12' v-html='product.NAME'/>
                     <span class='col-sm-6 col-12'>數量：<input type="number" name="" id="" class="itemNum"  v-model="product.NUM" max='20' min='1' @change="NUM=product.NUM"></span>
                     <div class="item_price col-sm-6 col-12">
                         <span>小計:</span>

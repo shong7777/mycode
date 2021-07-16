@@ -33,8 +33,8 @@ Vue.component('product-card', {
     <div class="productcard col-xs-12 col-sm-6 col-lg-4">
         <div class="card_padding">
             <img :src="product.IMG" alt="" srcset="" loading="lazy">
-            <span class="p_name">{{product.NAME}}</span>
-            <p class="p_info">{{product.INFO}}</p>
+            <span class="p_name" v-html='product.NAME'/>
+            <p class="p_info" v-html='product.INFO'/>
             <span class="p_more" @click='showInfo=true'>more</span>
             <div class="price">NT {{product.PRICE}}</div>
             <input type="button" value="加入購物車" class="add_cart" @click="addCart">
@@ -46,7 +46,7 @@ Vue.component('product-card', {
                 </div>
                 <div class='P_info'>
                     <span class='closeLB' @click='showInfo=false'>×</span>
-                    <h4>{{product.NAME}}</h4>
+                    <h4 v-html='product.NAME'/>
                     <p v-html='product.INFO'></p>
                     <input type="button" value="加入購物車" class="add_cart" @click="addCart">
                 </div>
@@ -74,8 +74,7 @@ Vue.component('product-card', {
     computed: {
         Value() {
             let product = this.product;
-            let value = product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.SIZE + '|' + product.PRICE + '|1';
-            return value;
+            return product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.SIZE + '|' + product.PRICE + '|1';
         },
     },
     watch: {
@@ -84,69 +83,6 @@ Vue.component('product-card', {
         }
     }
 });
-// Vue.component('cartItem', {
-//     data() {
-//         return {}
-//     },
-//     template: `<div class="cart-item row">
-//                 <div class="item_img col-4 col-sm-4">
-//                     <img :src="product.IMG" alt="" loading="lazy">
-//                 </div>
-//                 <div class="item_info col-7 row">
-//                     <span class=' col-12'>{{product.NAME}}</span>
-//                     <span class='col-sm-6 col-12'>數量：<input type="number" name="" id="" class="itemNum"  v-model="product.NUM" max='20' min='1'></span>
-//                     <div class="item_price col-sm-6 col-12">
-//                         <span>小計:</span>
-//                         <span>{{calamount}}</span>
-//                     </div>
-//                 </div>
-//                 <span class="dropitem col-1" @click="dropItem">&#10005;</span>
-//             </div>`,
-//     props: ['product'],
-//     methods: {
-//         dropItem() {
-//             this.num = 0;
-//             storage.removeItem(this.product.ID);
-//             let list = storage['addItemList'].split(',');
-//             list.pop();
-//             let index = list.indexOf(this.product.ID);
-//             app.addItems.splice(index, 1);
-//             list.splice(index, 1);
-//             if (list.length > 0) {
-//                 storage['addItemList'] = list + ',';
-//             } else {
-//                 storage['addItemList'] = '';
-//             };
-//             app.addItemList = storage['addItemList'].split(',');
-//             app.addItemList.pop();
-//             app.caltotal();
-//         },
-//         startbar() {
-//             console.log('start');
-//         },
-//         movebar(e) {
-//             console.log('move')
-//             console.log(e.path[0])
-//             console.log(e.touches.length);
-//         },
-//     },
-//     computed: {
-//         calamount() {
-//             return this.product.PRICE * this.product.NUM;
-//         },
-//     },
-//     watch: {
-//         calamount: function() {
-//             let info = storage[this.product.ID].split('|');
-//             info.splice(5, 1);
-//             info.push(this.product.NUM);
-//             info = info.join('|');
-//             storage[this.product.ID] = info;
-//             app.caltotal();
-//         }
-//     }
-
-// });
 const app = new Vue({
     el: "#app",
     data() {
@@ -170,7 +106,7 @@ const app = new Vue({
             notice: false,
             advInfo: false,
             advproduct: null,
-            perpageNum: 12,
+            perpageNum: null,
             productloading: true,
             total: 0,
         }
@@ -199,52 +135,51 @@ const app = new Vue({
             storage['addItemList'] = '';
         };
         //靜待網頁資料開始
-        this.type = ["塔", "蛋糕"];
-        this.type2 = ["巴西", "瓜地馬拉", "哥倫比亞"];
-        axios
-            .get('./js/product.json')
-            .then(response => { this.Allproducts = response.data })
-        this.advs = [{ "ADV_ID": "10001", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10001", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 1", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10002", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10002", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 2", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10003", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10003", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 3", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10004", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10007", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 7", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }];
+        // this.type = ["塔", "蛋糕"];
+        // this.type2 = ["巴西", "瓜地馬拉", "哥倫比亞"];
+        // axios
+        //     .get('./js/product.json')
+        //     .then(response => { this.Allproducts = response.data })
+        // this.advs = [{ "ADV_ID": "10001", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10001", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 1", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10002", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10002", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 2", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10003", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10003", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 3", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10004", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10007", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 7", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }];
         //靜態網頁資料結束
 
-        // axios
-        //     .all([this.getProducts(this.whatorderby), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
-        //         app.Allproducts = Products.data[0];
-        //         let type = [];
-        //         for (let i in Products.data[1]) {
-        //             type.push(Products.data[1][i].TYPE)
-        //         };
-        //         app.type = app.type.concat(type);
-        //         let type2 = [];
-        //         for (let i in Products.data[2]) {
-        //             type2.push(Products.data[2][i].TYPE)
-        //         };
-        //         app.type2 = app.type2.concat(type2);
-        //         app.advs = ShoppingAdv.data;
-        this.$nextTick(
-            function() {
-                $('#adv').slick({
-                    arrows: true,
-                    autoplay: true,
-                    autoplaySpeed: 2000,
-                    infinite: true,
-                    dots: true,
-                    slidesToScroll: 1,
-                    slidesToShow: 1,
-                });
-            });
-        document.getElementById('loading').style.display = 'none';
-        //     }));
+        axios
+            .all([this.getProducts(this.whatorderby), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
+                app.Allproducts = Products.data[0];
+                let type = [];
+                for (let i in Products.data[1]) {
+                    type.push(Products.data[1][i].TYPE)
+                };
+                app.type = app.type.concat(type);
+                let type2 = [];
+                for (let i in Products.data[2]) {
+                    type2.push(Products.data[2][i].TYPE)
+                };
+                app.type2 = app.type2.concat(type2);
+                app.advs = ShoppingAdv.data;
+                app.$nextTick(
+                    function() {
+                        $('#adv').slick({
+                            arrows: true,
+                            autoplay: true,
+                            autoplaySpeed: 2000,
+                            infinite: true,
+                            dots: true,
+                            slidesToScroll: 1,
+                            slidesToShow: 1,
+                        });
+                    });
+                document.getElementById('loading').style.display = 'none';
+            }));
+        this.perpageNum = (window.innerWidth > 992) ? 9 : 12;
+        window.onresize = () => {
+            this.perpageNum = (window.innerWidth > 992) ? 9 : 12;
+        };
     },
     mounted() {
-        this.caltotal()
+        this.caltotal();
+
     },
-    // beforeUpdate() {
-    //     console.log('bfupdated ');
-    // },
-    // updated() {
-    //     console.log('updated ')
-    // },
     methods: {
         getProducts(orderby) {
             return axios({
@@ -257,7 +192,7 @@ const app = new Vue({
         },
         getShoppingAdv() {
             return axios({
-                url: './phps/getAdv.php',
+                url: './phps/getadv.php',
                 method: 'get',
             })
         },
@@ -327,34 +262,20 @@ const app = new Vue({
             const nowpage = this.nowpage,
                 products = this.products,
                 perpageNum = this.perpageNum;
-            let PerpageProduct = [];
             if (nowpage * perpageNum < products.length) {
-
-                for (let j = (nowpage - 1) * perpageNum; j < nowpage * perpageNum; j++) {
-                    PerpageProduct.push(products[j]);
-                };
-            } else {
-                for (let j = (nowpage - 1) * perpageNum; j < products.length; j++) {
-                    PerpageProduct.push(products[j]);
-                };
+                return products.filter(obj => products.indexOf(obj) >= (nowpage - 1) * perpageNum && products.indexOf(obj) < nowpage * perpageNum);
             }
-            return PerpageProduct;
+            return products.filter(obj => products.indexOf(obj) >= (nowpage - 1) * perpageNum && products.indexOf(obj) < products.length);
         },
         PerpageProduct2() {
             const nowpage = this.nowpage2,
                 products = this.products2,
                 perpageNum = this.perpageNum;
-            let PerpageProduct = [];
             if (nowpage * perpageNum < products.length) {
-                for (let j = (nowpage - 1) * perpageNum; j < nowpage * perpageNum; j++) {
-                    PerpageProduct.push(products[j]);
-                };
-            } else {
-                for (let j = (nowpage - 1) * perpageNum; j < products.length; j++) {
-                    PerpageProduct.push(products[j]);
-                };
+                return products.filter(obj => products.indexOf(obj) >= (nowpage - 1) * perpageNum && products.indexOf(obj) < nowpage * perpageNum);
             }
-            return PerpageProduct;
+            return products.filter(obj => products.indexOf(obj) >= (nowpage - 1) * perpageNum && products.indexOf(obj) < products.length);
+
         },
         watchProducts() {
             return [this.Allproducts, this.selectedType];
@@ -366,37 +287,18 @@ const app = new Vue({
     },
     watch: {
         watchProducts: function() {
-            let t = document.getElementsByClassName('product-list')[0];
-            t.style.display = 'none';
             this.productloading = true;
-            const Allproducts = this.Allproducts;
-            let products = [];
-            for (let i in Allproducts) {
-                if (Allproducts[i].TYPE == this.selectedType) {
-                    products.push(Allproducts[i])
-                };
-            }
-            this.products = products;
+            this.products = this.Allproducts.filter(obj => obj.TYPE === this.selectedType);
             this.nowpage = 1;
-            t.style.display = 'flex';
             this.productloading = false;
+
         },
         watchProducts2: function() {
-            let t = document.getElementsByClassName('product-list')[1];
-            t.style.display = 'none';
             this.productloading = true;
-            const Allproducts = this.Allproducts;
-            let products = [];
-            for (let i in Allproducts) {
-                if (Allproducts[i].TYPE == this.selectedType2) {
-                    products.push(Allproducts[i])
-                };
-            }
-
-            this.products2 = products;
+            this.products2 = this.Allproducts.filter(obj => obj.TYPE === this.selectedType2);
             this.nowpage2 = 1;
-            t.style.display = 'flex';
             this.productloading = false;
+
         },
         total: function() {
             if (this.total > 10000) {

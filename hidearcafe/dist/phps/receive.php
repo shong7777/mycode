@@ -12,10 +12,13 @@
         // $AL->EncryptType = ECPay_EncryptType::ENC_MD5;  // MD5
         $AL->EncryptType = ECPay_EncryptType::ENC_SHA256; // SHA256
         $feedback = $AL->CheckOutFeedback();
-        $orderno=$feedback['MerchantTradeNo'];
+        
+        $orderno=substr($feedback['MerchantTradeNo'],0,-10);;//測試用
+        // $orderno=$feedback['MerchantTradeNo'];//正式用
+        
         require_once("./connect.php");
+        $sql="UPDATE orders SET PAYMENT = '1' WHERE orders_no = $orderno";
                 $products = $pdo->prepare($sql);
-                $sql="UPDATE orders SET PAYMENT = '1' WHERE orders_no = $orderno";
                 $products->execute();
             
         // 以付款結果訊息進行相對應的處理

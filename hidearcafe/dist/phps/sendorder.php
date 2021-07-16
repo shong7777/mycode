@@ -166,14 +166,14 @@ try{
 
 
         //基本參數(請依系統規劃自行調整)
-        $MerchantTradeNo = "Test".time() ;
-        $obj->Send['ReturnURL']         = "http://localhost/hidearcafe/dist/receive.php" ;     //付款完成通知回傳的網址
+        $MerchantTradeNo = $orderNo.time() ;
+        $obj->Send['ReturnURL']         = "http://personaltestdebug.mx500.com/phps/receive.php" ;     //付款完成通知回傳的網址
         $obj->Send['MerchantTradeNo']   = $MerchantTradeNo;                           //訂單編號
         $obj->Send['MerchantTradeDate'] = date('Y/m/d H:i:s');                        //交易時間
         $obj->Send['TotalAmount']       =  $total;                                       //交易金額
         $obj->Send['TradeDesc']         = "小賣店交易" ;                           //交易描述
         $obj->Send['ChoosePayment']     = ECPay_PaymentMethod::ALL ;                  //付款方式:全功能
-        $obj->Send['ClientBackURL']     = "http://localhost/cafe/hidearcafe/dist/orders.html?orders_no=$orderNo";       //付款完成後跳轉到訂單頁面
+        $obj->Send['ClientBackURL']     = "http://personaltestdebug.mx500.com/orders.html?orders_no=$orderNo";       //付款完成後跳轉到訂單頁面
 
 
         //訂單的商品資料

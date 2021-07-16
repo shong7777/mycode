@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新增商品</title>
+    <style type="text/css">
+        h2 {
+            text-align: center;
+        }
+        
+        table {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="./phps/prodInsert.php" method="post" enctype="multipart/form-data">
+        <h2>新增商品</h2>
+        <table align="center" border="1" cellspacing="0">
+            <tr>
+                <th>類別</th>
+                <td><select name="class">
+					<option value="甜點">甜點</option>
+					<option value="咖啡">咖啡</option>
+				</select></td>
+
+            </tr>
+            <tr>
+                <th>商品名稱</th>
+                <td><input type="text" name="pname"></td>
+
+            </tr>
+            <tr>
+                <th>價格</th>
+                <td><input type="text" name="price"></td>
+            </tr>
+            <tr>
+                <th>類型</th>
+                <td><input type="text" name="type"></td>
+            </tr>
+            <tr>
+                <th>商品圖</th>
+                <td>上傳檔案:<input type="file" name="upFile" accept="image/*"><br>
+                    <input type="hidden">
+                    <input type="hidden" name="img">
+                    <img src="" alt="" id="img">
+                </td>
+
+            </tr>
+            <tr>
+                <th>宅配體積</th>
+                <td><select name="size">
+					<option value="1">大</option>
+					<option value="0.5">小</option>
+				</select></td>
+            </tr>
+            <tr>
+                <th>商品資訊</th>
+                <td><textarea name="info" id="" cols="30" rows="10"></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" name="submit"><input type="button" value="test" onclick='test()'></td>
+            </tr>
+        </table>
+    </form>
+    <script>
+        function test() {
+            let file = document.forms[0].upFile.files[0];
+
+            readFile(file)
+        }
+
+
+        function readFile(file) {
+            //判斷型別是不是圖片 
+            if (!/image\/\w/.test(file.type)) {
+                alert("請確認檔案為圖片檔");
+                return false;
+            }
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e) {
+                dealImage(this.result, {
+                    width: 200
+                }, base => {
+                    document.getElementById('img').setAttribute('src', base);
+                    document.forms[0].img.value = base;
+                    console.log(base)
+                });
+            }
+        }
+        /**
+         * 圖片壓縮，預設同比例壓縮
+         * @param {Object} path
+         * pc端傳入的路徑可以為相對路徑，但是在移動端上必須傳入的路徑是照相圖片儲存的絕對路徑
+         * @param {Object} obj
+         * obj 物件 有 width， height， quality(0-1)
+         * @param {Object} callback
+         * 回撥函式有一個引數，base64的字串資料
+         */
+        function dealImage(path, obj, callback) {
+            var img = new Image();
+            img.src = path;
+            img.onload = function() {
+                var that = this;
+                // 預設按比例壓縮
+                var w = that.width,
+                    h = that.height,
+                    scale = w / h;
+                w = obj.width || w;
+                h = obj.height || (w / scale);
+                var quality = 0.7; // 預設圖片質量為0.7
+                //生成canvas
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                // 建立屬性節點
+                var anw = document.createAttribute("width");
+                anw.nodeValue = w;
+                var anh = document.createAttribute("height");
+                anh.nodeValue = h;
+                canvas.setAttributeNode(anw);
+                canvas.setAttributeNode(anh);
+                ctx.drawImage(that, 0, 0, w, h);
+                // 影象質量
+                if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+                    quality = obj.quality;
+                }
+                // quality值越小，所繪製出的影象越模糊
+                let base64 = canvas.toDataURL('image/jpeg', quality);
+                // 回撥函式返回base64的值
+                callback(base64);
+            }
+        }
+    </script>
+</body>
+
+</html>

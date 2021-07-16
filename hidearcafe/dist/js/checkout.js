@@ -1777,74 +1777,41 @@ const app = new Vue({
             this.total = total;
             this.itemsSize = size;
         };
-        //靜態網頁用data開始
-        this.allGiftWithPurchase = [{ "ID": "GWP1", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包1", "PRICE": "0", "SIZE": "1" }, { "ID": "GWP4", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包4", "PRICE": "0", "SIZE": "1" }, { "ID": "GWP5", "GRADE": "1", "IMG": ".\/images\/product.png", "INFO": "贈品內容贈品內容贈品內容贈品內容贈品內容贈品內容", "NAME": "感恩購買大禮包5", "PRICE": "0", "SIZE": "1" }];
-        this.$nextTick(function() {
-                if (this.allGiftWithPurchase.length > 2) {
-                    $('#gwp').slick({
-                        arrows: true,
-                        // infinite: true,
-                        slidesToScroll: 3,
-                        slidesToShow: 3,
-                        responsive: [{
-                                breakpoint: 600,
-                                settings: {
-                                    // centerMode: true,
-                                    slidesToScroll: 2,
-                                    slidesToShow: 2,
-                                }
-                            },
-                            {
-                                breakpoint: 350,
-                                settings: {
-                                    // centerMode: true,
-                                    slidesToScroll: 1,
-                                    slidesToShow: 1,
-                                }
-                            },
-                        ]
-                    });
-                }
+        let params = new URLSearchParams();
+        params.append('total', this.total);
+        axios
+            .post('./phps/getgwp.php', params).then(function(res) {
+                let data = res.data;
+                app.allGiftWithPurchase = data;
+                app.$nextTick(function() {
+                    if (app.allGiftWithPurchase.length > 2) {
+                        $('#gwp').slick({
+                            arrows: true,
+                            // infinite: true,
+                            slidesToScroll: 3,
+                            slidesToShow: 3,
+                            responsive: [{
+                                    breakpoint: 600,
+                                    settings: {
+                                        // centerMode: true,
+                                        slidesToScroll: 2,
+                                        slidesToShow: 2,
+                                    }
+                                },
+                                {
+                                    breakpoint: 350,
+                                    settings: {
+                                        // centerMode: true,
+                                        slidesToScroll: 1,
+                                        slidesToShow: 1,
+                                    }
+                                },
+                            ]
+                        });
+                    }
+                })
                 document.getElementById('loading').style.display = 'none';
-            })
-            //靜態網頁用data結束
-
-        // let params = new URLSearchParams();
-        // params.append('total', this.total);
-        // axios
-        // .post('./phps/getgwp.php', params).then(function(res) {
-        //     let data=res.data;
-        //     app.allGiftWithPurchase=data;
-        //     app.$nextTick(function(){
-        //         if(app.allGiftWithPurchase.length>2){
-        //                 $('#gwp').slick({
-        //                     arrows: true,
-        //                     // infinite: true,
-        //                     slidesToScroll: 3,
-        //                     slidesToShow: 3,
-        //                     responsive: [
-        //                         {
-        //                         breakpoint: 600,
-        //                         settings: {
-        //                         // centerMode: true,
-        //                         slidesToScroll: 2,
-        //                         slidesToShow: 2,
-        //                         }
-        //                     },
-        //                         {
-        //                         breakpoint: 350,
-        //                         settings: {
-        //                         // centerMode: true,
-        //                         slidesToScroll: 1,
-        //                         slidesToShow: 1,
-        //                         }
-        //                     },
-        //                     ]
-        //                 });
-        //         }
-        //     })
-        //     document.getElementById('loading').style.display='none';
-        // }).catch((error) => { console.error(error) });
+            }).catch((error) => { console.error(error) });
     },
     methods: {
         checkout() {
@@ -1907,8 +1874,7 @@ const app = new Vue({
                         storage.removeItem('addItemList');
                         storage.removeItem('addpriceproduct');
 
-                        // document.orderform.submit();
-                        location.href = './orders.html?orders_no=3'
+                        document.orderform.submit();
                     }
 
                 }
@@ -1919,29 +1885,21 @@ const app = new Vue({
             this.showGiftWithPurchaseList = true;
         },
         checkcoupon() {
-            //靜態網頁用data開始
-            if (this.discountText == 'hihi') {
-                this.discount = 200;
-                this.discountLB = false;
-            } else {
-                alert('折價代碼錯誤');
-                this.discount = 0;
-            };
-            //靜態網頁用data結束
 
-            // let params = new URLSearchParams();
-            // params.append('text', this.discountText);
-            // axios
-            //     .post('./phps/getcoupon.php', params).then(function(res) {
-            //         let data = res.data;
-            //         if (data != '') {
-            //             app.discount = data;
-            //             app.discountLB = false;
-            //         } else {
-            //             alert('折價代碼錯誤');
-            //             app.discount = 0;
-            //         }
-            //     }).catch((error) => { console.error(error) });
+
+            let params = new URLSearchParams();
+            params.append('text', this.discountText);
+            axios
+                .post('./phps/getcoupon.php', params).then(function(res) {
+                    let data = res.data;
+                    if (data != '') {
+                        app.discount = data;
+                        app.discountLB = false;
+                    } else {
+                        alert('折價代碼錯誤');
+                        app.discount = 0;
+                    }
+                }).catch((error) => { console.error(error) });
 
         },
         saveInfo(e) {

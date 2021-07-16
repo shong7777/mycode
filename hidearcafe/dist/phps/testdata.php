@@ -18,5 +18,5 @@
     //         echo "錯誤行號 : " . $e->getLine() . "<br>"; 
     //         echo "錯誤原因 : " . $e->getMessage() . "<br>";
     //     };
-    echo time();
+    echo substr('281625404809',0,-10);
 ?>
