@@ -72,19 +72,35 @@ exports.del = clearCss;
 
 //搬運js（src->dist）
 function moveJs() {
-    return src("src/js/*.js").pipe(dest("dist/js/"));
+    return src("src/js/**/*.js").pipe(dest("dist/js/"));
 }
 exports.moveJs = moveJs;
 //刪除Js
 function clearJs() {
     //src  檔案路徑
-    return src("dist/*.js", {
+    return src("dist/js/**/*.js", {
         read: false, //避免 gulp 去讀取檔案內容，讓刪除效能變好
         force: true, //強制刪除
         allowEmpty: true,
     }).pipe(clean());
 }
 exports.clearJs = clearJs;
+//搬運json（src->dist）
+function moveJson() {
+    return src("src/js/json/*.json").pipe(dest("dist/js/json/"));
+}
+exports.moveJson = moveJson;
+//刪除Js
+function clearJson() {
+    //src  檔案路徑
+    return src("dist/js/json/*.json", {
+        read: false,
+        force: true,
+        allowEmpty: true,
+    }).pipe(clean());
+}
+
+exports.clearJson = clearJson;
 //搬運php（src->dist）
 function movePhp() {
     return src("src/phps/*.php").pipe(dest("dist/phps/"));
@@ -106,7 +122,7 @@ exports.clearPhp = clearPhp;
 function moveVendors() {
     return src("src/vendors/**/**/**/*.*").pipe(dest("dist/vendors/"));
 }
-exports.moveJs = moveVendors;
+exports.moveVendors = moveVendors;
 //刪除vendors
 function clearVendors() {
     //src  檔案路徑
@@ -120,7 +136,8 @@ exports.clearVendors = clearVendors;
 //watch
 function watchFile() {
     watch("src/sass/**/*.scss", series(clearCss, sassStyle));
-    watch("src/js/*.js", series(clearJs, moveJs));
+    watch("src/js/**/*.js", series(clearJs, moveJs));
+    watch("src/js/json/*.json", series(clearJson, moveJson));
     watch(["src/*.html", "src/layout/nav.html", "src/layout/footer.html", "src/layout/cart.html", ], series(clearHtml, includeHTML));
     // watch("src/*.html", series(clearHtml, moveHTML));
     watch("src/images/**/*.*", series(clearImg, moveImg));

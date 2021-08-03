@@ -30,14 +30,13 @@ Vue.component('product-card', {
         }
     },
     template: `
-    <div class="productcard col-xs-12 col-sm-6 col-lg-4">
-        <div class="card_padding">
+    <div class="productcard col-xs-12 col-sm-6 col-lg-4" >
+        <div class="card_padding" @click='showInfo=true'>
             <img :src="product.IMG" alt="" srcset="" loading="lazy">
             <span class="p_name" v-html='product.NAME'/>
             <p class="p_info" v-html='product.INFO'/>
-            <span class="p_more" @click='showInfo=true'>more</span>
             <div class="price">NT {{product.PRICE}}</div>
-            <input type="button" value="加入購物車" class="add_cart" @click="addCart">
+            <input type="button" value="加入購物車" class="add_cart" @click.stop="addCart">
         </div>
         <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
             <div>
@@ -96,8 +95,8 @@ const app = new Vue({
             nowpage: 1,
             nowpage2: 1,
             selectedClass: '甜點',
-            selectedType: '塔',
-            selectedType2: '巴西',
+            selectedType: null,
+            selectedType2: null,
             addcartLBText: '已加入購物車。',
             addcartLB: false,
             addItemList: [],
@@ -107,7 +106,7 @@ const app = new Vue({
             advInfo: false,
             advproduct: null,
             perpageNum: null,
-            productloading: true,
+            productloading: false,
             total: 0,
         }
     },
@@ -150,11 +149,17 @@ const app = new Vue({
                 for (let i in Products.data[1]) {
                     type.push(Products.data[1][i].TYPE)
                 };
+                if (Products.data[1][0].TYPE) {
+                    app.selectedType = Products.data[1][0].TYPE;
+                }
                 app.type = app.type.concat(type);
                 let type2 = [];
                 for (let i in Products.data[2]) {
                     type2.push(Products.data[2][i].TYPE)
                 };
+                if (Products.data[2][0].TYPE) {
+                    app.selectedType2 = Products.data[2][0].TYPE;
+                }
                 app.type2 = app.type2.concat(type2);
                 app.advs = ShoppingAdv.data;
                 app.$nextTick(

@@ -56,9 +56,12 @@
                 <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button id="checking_orderBtn">查詢訂單</button></li>
                 <li @click='notice=true' style="cursor: pointer;">購買須知</li>
                 <div id="notice" v-if="notice" @click.self='notice=false'>
-                    <div>
-                        <span class='closeLB' @click='notice=false' style="color: black;">×</span>
-                        <h4 id="noticeText" style="color:black">注意事項</h4>
+                    <div id="noticeText">
+                        <span class='closeLB' @click='notice=false'>×</span>
+                        <img src="./images/89833.jpg" alt="" srcset="">
+                        <!-- <p>最佳賞味期:到貨隔天(製作後三日)<br> 請冷藏一周內食用完畢<br> 滿2000免運
+                        </p> -->
+                        <h4>滿2000免運</h4>
                     </div>
                 </div>
             </ul>

@@ -59,9 +59,12 @@
                 <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button id="checking_orderBtn">查詢訂單</button></li>
                 <li @click='notice=true' style="cursor: pointer;">購買須知</li>
                 <div id="notice" v-if="notice" @click.self='notice=false'>
-                    <div>
-                        <span class='closeLB' @click='notice=false' style="color: black;">×</span>
-                        <h4 id="noticeText" style="color:black">注意事項</h4>
+                    <div id="noticeText">
+                        <span class='closeLB' @click='notice=false'>×</span>
+                        <img src="./images/89833.jpg" alt="" srcset="">
+                        <!-- <p>最佳賞味期:到貨隔天(製作後三日)<br> 請冷藏一周內食用完畢<br> 滿2000免運
+                        </p> -->
+                        <h4>滿2000免運</h4>
                     </div>
                 </div>
             </ul>
@@ -81,7 +84,7 @@
                             <h3>加價購</h3>
                             <cart-item :product='addpriceproduct' :key='addpriceproduct.ID' ref='addpriceproduct'></cart-item>
                         </div>
-                        <h3>訂單金額:{{total}}</h3>
+                        <h3>訂單小計:{{total}}</h3>
                         <div v-if='total>2000'>
                             <div v-if='GiftWithPurchase'>
                                 <h3>滿額贈</h3>
@@ -103,6 +106,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="infoT">
                     <div>
                         <label>訂購人：</label><br>
@@ -145,7 +149,8 @@
                     </div>
                     <div class="function">
                         <label>寄送方式：</label><br>
-                        <select name="delivery" id="delivery"><option value="冷凍宅配">冷凍宅配</option></select>
+                        <label>滿2000免運</label><br>
+                        <select name="delivery" id="delivery"><option value="冷藏宅配">冷藏宅配</option></select>
                         <label>運費:{{calDeliveryFee}}</label>
                     </div>
                     <div class="function">
@@ -169,12 +174,16 @@
                             <option value="ATM轉帳">ATM轉帳</option>
                             <option value="便利商店付款">便利商店付款</option>
                         </select> -->
+                        <br>
+                        <h3>訂單總額:{{total+calDeliveryFee}}</h3>
+
                     </div>
                     <div class="function confirm">
                         <a href="./index.html" class="btn">取消</a>
                         <input type="submit" value="送出訂單" @click.prevent='submitForm' class="btn">
                     </div>
                 </div>
+
             </form>
         </div>
         <footer>

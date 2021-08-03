@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/backstage.css">
+</head>
+
+<body>
+    <div class="navigation" id="navigation">
+        <ul id='linkul'></ul>
+    </div>
+    <div id="page_content">
+        <div id="serverinfo"><input type="button" value="←" id="hidenavigation" onclick="hidenavigation()"></div>
+        <div id="load">資料讀取中請稍後...</div>
+        <iframe src="./management.html?tablename=orders" frameborder="0" id='responsivetable' onload='loadiframe()'></iframe>
+    </div>
+    <script>
+        window.addEventListener('load', init())
+        var hidenav = false;
+
+        function init() {
+            let lilist = [{
+                name: "訂單待處理列表",
+                link: 'orders'
+            }, {
+                name: "商品列表",
+                link: 'product'
+            }, {
+                name: "加價購列表",
+                link: 'addprice'
+            }, {
+                name: "滿額贈列表",
+                link: 'gift_with_purchase'
+            }, {
+                name: "廣告列表",
+                link: 'adv'
+            }, {
+                name: "折價碼列表",
+                link: 'coupon'
+            }, {
+                name: "訂單全部列表",
+                link: 'Allorders'
+            }, ]
+            lilist.forEach(obj => addlinkli(obj, changeiframe))
+            addlinkli({
+                name: '新增商品'
+            }, additem)
+        }
+
+        function addlinkli(data, callback) {
+            let li = document.createElement('li');
+            li.setAttribute('data-link', data.link || '');
+            li.innerText = data.name;
+            li.addEventListener('click', callback)
+            document.getElementById('linkul').appendChild(li);
+        }
+
+        function changeiframe(e) {
+            let path = './management.html?tablename=';
+            document.getElementById('responsivetable').src = path + e.target.dataset.link;
+            document.getElementById('load').setAttribute('class', '');
+
+        }
+
+        function additem(e) {
+            let path = './prodInsert.html';
+            document.getElementById('responsivetable').src = path;
+            document.getElementById('load').setAttribute('class', '');
+        }
+
+        function loadiframe() {
+            document.getElementById('load').setAttribute('class', 'hide');
+        }
+
+        function hidenavigation() {
+            if (hidenav) {
+                document.getElementById('navigation').style.left = '0px';
+                document.body.style.marginLeft = '200px';
+                hidenav = false;
+            } else {
+                document.getElementById('navigation').style.left = '-200px';
+                document.body.style.marginLeft = 0;
+                hidenav = true;
+            }
+        }
+    </script>
+</body>
+
+</html>

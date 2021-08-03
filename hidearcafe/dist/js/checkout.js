@@ -1885,8 +1885,6 @@ const app = new Vue({
             this.showGiftWithPurchaseList = true;
         },
         checkcoupon() {
-
-
             let params = new URLSearchParams();
             params.append('text', this.discountText);
             axios
@@ -1955,8 +1953,9 @@ const app = new Vue({
             // 運費計算 暫時
             let fee = 0,
                 boxsize = 8;
-            fee += parseInt(this.itemsSize / boxsize) * 150;
-            fee += (this.itemsSize % boxsize > 0) ? 150 : 0;
+            fee += parseInt(this.itemsSize / boxsize) * 160;
+            fee += (this.itemsSize % boxsize > 0) ? 160 : 0;
+            if (this.total >= 2000) return 0;
             return fee;
         },
 
