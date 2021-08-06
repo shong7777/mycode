@@ -106,7 +106,7 @@ const app = new Vue({
             advInfo: false,
             advproduct: null,
             perpageNum: null,
-            productloading: false,
+            productloading: true,
             total: 0,
         }
     },

@@ -87,7 +87,7 @@
                     <h3>加價購</h3>
                     <addprice-item :product='addpriceproduct' :key='addpriceproduct.ID'></addprice-item>
                     <br>
-                    <input type="button" value="選擇其他或取消加價購" @click='changeaddprice' class="change">
+                    <input type="button" value="選擇加價購" @click='changeaddprice' class="change">
                 </div>
                 <hr style="border-top: 2px solid rgba(0,0,0,.4)">
                 <h3>合計:{{calAll}}</h3>
@@ -98,8 +98,9 @@
                     <product-card v-for='product in addpriceproducts' :product='product'></product-card>
                 </div>
             </div>
-            <div>
-                <a href="./checkout.html" id="checkout" @click='checkout'>繼續結帳</a>
+            <div class="link">
+                <a href="./index.html">繼續購物</a>
+                <a href="./checkout.html" id="checkout" @click='checkout'>前往結帳</a>
             </div>
         </div>
         <footer>

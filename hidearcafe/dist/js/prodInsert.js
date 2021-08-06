@@ -60,6 +60,7 @@ function init() {
                 $id('discount').setAttribute('class', 'hide')
                 $id('text').setAttribute('class', 'hide')
                 document.forms[0].size.value = 0;
+                document.forms[0].price.value = 0;
                 break;
             case 'adv':
                 console.log('新增adv');
@@ -112,7 +113,12 @@ function readFile(file) { //判斷型別是不是圖片
 }
 
 function sent() {
+    if (tablename != 'coupon' && document.forms[0].img.value === '') {
+        alert('未選擇圖片');
+        return false;
+    }
     console.log('送出資料');
+    $id('processing').setAttribute('class', '');
     let form = document.forms[0];
     let params = new URLSearchParams();
     params.append('tablename', tablename);
@@ -159,9 +165,14 @@ function sent() {
     }
     axios.post('./phps/prodInsert.php', params).then(result => {
         console.log(result.data);
+        $id('processing').setAttribute('class', 'hide');
         if (result.data === '新增成功') { alert('新增成功'); } else { alert('新增失敗，請重新嘗試。') }
         location.reload();
-    }).catch((error) => console.log(error))
+    }).catch((error) => {
+        console.log(error);
+        alert('新增失敗，請重新嘗試。');
+        location.reload();
+    })
 }
 
 function changesize(e) {

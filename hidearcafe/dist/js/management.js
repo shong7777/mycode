@@ -492,7 +492,7 @@ function selectupdate(e) {
     params.append('tablename', tablename);
     params.append('column', column);
     params.append('value', e.value);
-    if (tablename === 'orders') {
+    if (tablename === 'orders' || tablename === 'Allorders') {
         params.append('orders_no', e.parentNode.parentNode.cells[0].innerText);
     } else {
         params.append('ID', e.parentNode.parentNode.cells[0].innerText);

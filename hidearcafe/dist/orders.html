@@ -107,16 +107,24 @@
                     <span v-else-if='orderinfo.PAYMENT==1' style="color:gray;">已付款</span>
                     <span v-else style="color:red;">此訂單的付款狀態有問題，請聯絡店家，謝謝。</span>
                 </label></div>
+                <div><label>出貨狀態：
+                    <span v-if='orderinfo.ORDER_STATE==="0"' style="color:#ff0000b3;">未付款</span>
+                    <span v-else-if='orderinfo.ORDER_STATE==="1"' style="color:gray;">出貨準備中</span>
+                    <span v-else-if='orderinfo.ORDER_STATE==="2"' style="color:gray;">商品已寄出</span>
+                    <span v-else-if='orderinfo.ORDER_STATE==="3"' style="color:gray;">商品已送達</span>
+                    <span v-else-if='orderinfo.ORDER_STATE==="-1"' style="color:gray;">訂單已取消</span>
+                    <span v-else style="color:red;">此訂單的付款狀態有問題，請聯絡店家，謝謝。</span>
+                </label></div>
             </div>
             <h4 style="text-align: center;">訂單內容：</h4>
             <div class="itemList">
                 <cart-item :product='product' v-for='product in products' :key="product.ID"></cart-item>
                 <div class="row" v-if='addpriceproducts.length>0'>加價購：
-                    <cart-item :product='product' v-for='product in addpriceproducts' :key="product.ID"></cart-item>
                 </div>
+                <cart-item :product='product' v-for='product in addpriceproducts' :key="product.ID" v-if='addpriceproducts.length>0'></cart-item>
                 <div class="row" v-if='gwpproducts.length>0'>滿額禮：
-                    <cart-item :product='product' v-for='product in gwpproducts' :key="product.ID"></cart-item>
                 </div>
+                <cart-item :product='product' v-for='product in gwpproducts' :key="product.ID" v-if='gwpproducts.length>0'></cart-item>
             </div>
             <div class="function">
                 <input type="button" @click='print()' value="列印或另存PDF" class="btn" id="print">

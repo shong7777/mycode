@@ -232,6 +232,10 @@ const app = new Vue({
             let products = [];
             const Allproducts = this.allAddpriceproducts;
             const total = this.total;
+
+            // if (total >= 2000 && total < 3000) { products = Allproducts.filters(p => p.GRADE === 1); }
+
+
             for (let i in Allproducts) {
                 if (total >= 2000 && total < 3000) {
                     if (Allproducts[i].GRADE == 1) {
@@ -248,8 +252,8 @@ const app = new Vue({
                 } else {
                     products = [];
                 }
+                return products;
             }
-            return products;
         },
         calAll() {
             if (this.addpriceproduct) {

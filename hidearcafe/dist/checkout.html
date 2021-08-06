@@ -73,6 +73,7 @@
 </header>
 <div class="headerspace"></div>
         <div class="container">
+            <h3 style="font-size: 18px;color: #000c96;">本訂購單僅提供台灣本島使用，外島及海外請電洽，如有不便還請見諒。</h3>
             <form action="./phps/sendorder.php" name='orderform' method="POST">
                 <div class="itemList">
                     <div>
@@ -110,38 +111,54 @@
                 <div class="infoT">
                     <div>
                         <label>訂購人：</label><br>
-                        <input type="text" name="sName" id="sName" placeholder="訂購人姓名" value="test" @change='saveInfo' v-model='sName'>
+                        <input type="text" name="sName" id="sName" placeholder="訂購人姓名" @change='saveInfo' v-model='sName' class='required'>
                     </div>
                     <div>
                         <label>訂購人電話：</label><br>
-                        <input type="text" name="sPhone" id="sPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='sPhone'>
+                        <input type="text" name="sPhone" id="sPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='sPhone' class='required'>
                     </div>
                     <div>
                         <label>訂購人地址：</label><br>
-                        <input type="text" name="sAdd" id="sAdd" placeholder="訂購人地址" @change='saveInfo' v-model='sAdd'>
+                        <div class="zip">
+                            <select name="sdistrict" v-model='sdistrict' @change='saveInfo' id="sdistrict" class='required'>
+                                <option value="">請選擇縣市</option>
+                                <option :value="district.name" v-for='district in taiwan_districts'>{{district.name}}</option>
+                            </select>
+                            <select name="sarea" v-model='sarea' @change='saveInfo' id='sarea' class='required'>
+                                <option value="">請選擇地區</option>
+                                <option :value="area.name" v-for='area in sender_selecteddistrict' :data-zip='area.zip'>{{area.name}}</option>
+                            </select>
+                            <span id='szip'>郵遞區號：<input type="text" v-model='szip' name='szipcode' id='szipcode' v-if='area!==""' readonly  class="zipcode"></span>
+                        </div>
+                        <input type="text" name="sAdd" id="sAdd" placeholder="訂購人地址" @change='saveInfo' v-model='sAdd' class='required'>
+                    </div>
+                    <div>
+                        <label>郵件信箱：</label><br>
+                        <input type="text" name="mail" placeholder="example@email.com" @change='saveInfo' v-model='mail' class='required'>
                     </div>
                     <div>
                         <label>收件人：</label><input type="button" value="同寄件人" @click='syncinfo' class="like"><br>
-                        <input type="text" name="rName" id="rName" placeholder="收件人姓名" @change='saveInfo' v-model='rName'>
+                        <input type="text" name="rName" id="rName" placeholder="收件人姓名" @change='saveInfo' v-model='rName' class='required'>
                     </div>
                     <div>
                         <label>收件人電話：</label><br>
-                        <input type="text" name="rPhone" id="rPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='rPhone'>
+                        <span class="tip">市話區碼請用 - 隔開 範例03-4567890</span><br>
+                        <input type="text" name="rPhone" id="rPhone" placeholder="市話或手機" @change='saveInfo' v-model='rPhone' class='required'>
                     </div>
                     <div>
                         <label>收件人地址：</label><br>
                         <div class="zip">
-                            <select name="district" v-model='district' @change='saveInfo'>
+                            <select name="district" v-model='district' @change='saveInfo' class='required' id="district">
                                 <option value="">請選擇縣市</option>
-                                <option :value="i" v-for='(district,i) in taiwan_districts'>{{district.name}}</option>
+                                <option :value="district.name" v-for='district in taiwan_districts'>{{district.name}}</option>
                             </select>
-                            <select name="area" v-model='area' @change='saveInfo'>
+                            <select name="area" v-model='area' @change='saveInfo' id='area' class='required'>
                                 <option value="">請選擇地區</option>
-                                <option :value="i" v-for='(area,i) in selecteddistrict'>{{area}}</option>
+                                <option :value="area.name" v-for='area in selecteddistrict' :data-zip='area.zip'>{{area.name}}</option>
                             </select>
-                            <span id='zip'>郵遞區號：<input type="text" :value='zip' name='zipcode' id='zipcode' v-if='area!==""'></span>
+                            <span id='zip'>郵遞區號：<input type="text" v-model='zip' name='zipcode' id='zipcode' v-if='area!==""' readonly class="zipcode" ></span>
                         </div>
-                        <input type="text" name="rAdd" id="rAdd" placeholder="收件人地址" @change='saveInfo' v-model='rAdd'>
+                        <input type="text" name="rAdd" id="rAdd" placeholder="收件人地址" @change='saveInfo' v-model='rAdd' class='required'>
                     </div>
                     <div>
                         <label>附註：</label><br>
@@ -150,7 +167,8 @@
                     <div class="function">
                         <label>寄送方式：</label><br>
                         <label>滿2000免運</label><br>
-                        <select name="delivery" id="delivery"><option value="冷藏宅配">冷藏宅配</option></select>
+                        <!-- <select name="delivery" id="delivery" ><option value="冷藏宅配">冷藏宅配</option></select> -->
+                        <input name="delivery" id="delivery" value="冷藏宅配" readonly/>
                         <label>運費:{{calDeliveryFee}}</label>
                     </div>
                     <div class="function">
@@ -175,7 +193,7 @@
                             <option value="便利商店付款">便利商店付款</option>
                         </select> -->
                         <br>
-                        <h3>訂單總額:{{total+calDeliveryFee}}</h3>
+                        <h3>訂單總額:{{total+calDeliveryFee-discount}}</h3>
 
                     </div>
                     <div class="function confirm">
