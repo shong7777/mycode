@@ -6,10 +6,10 @@ Vue.component('cartItem', {
     },
     template: `<div class="cart-item row">
                     <input type="hidden" :name="product.ID" :value='itemvalue'>
-                    <div class="item_img col-sm-2 col-3">
+                    <div class="item_img col-sm-2 col-5">
                         <img :src="product.IMG" alt="">
                     </div>
-                    <div class='col-sm-10 col-9 pinfo row'>
+                    <div class='col-sm-10 col-7 pinfo row'>
                         <div class='col-sm-5 col-12 pname'>
                             <div >{{product.NAME}}</div>
                         </div>
@@ -42,32 +42,21 @@ Vue.component('product-card', {
         }
     },
     template: `
-    <div class="productcard col-xs-12 col-sm-6 col-lg-4">
-        <div class="card_padding">
-            <img :src="product.IMG" alt="" srcset="">
-            <span class="p_name">{{product.NAME}}</span>
-            <p class="p_info">{{product.INFO}}</p>
-            <span class="p_more" @click='showInfo=true'>more</span>
+    <div class="productcard col-md-4 col-sm-6 col-6 " >
+        <div class="card_padding" @click='show'>
+            <img :src="product.IMG" alt="" srcset="" loading="lazy">
+            <span class="p_name" v-html='product.NAME'/>
+            <p class="p_info" v-html='product.INFO'/>
             <div class="price">NT {{product.PRICE}}</div>
-            <input type="button" value="滿額贈" class="add_cart" @click="addpriceproduct">
-            <input type="hidden" name="" :value='hiddenValue' class='productInfo'>
-        </div>
-        <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
-            <div>
-                <div class='P_img'>
-                <img :src="product.IMG" alt="" srcset="">
-                </div>
-                <div class='P_info'>
-                    <span class='closeLB' @click='showInfo=false'>×</span>
-                    <h4>{{product.NAME}}</h4>
-                   <p v-html='product.INFO'></p>
-                    <input type="button" value="滿額贈" class="add_cart" @click="addpriceproduct">
-                </div>
-            </div>
+            <input type="button" value="加入購物車" class="add_cart" @click.stop="addpriceproduct">
         </div>
     </div>
     `,
     methods: {
+        show() {
+            app.product = this.product;
+            app.showInfo = true
+        },
         addpriceproduct() {
             app.GiftWithPurchase = this.product;
             app.GiftWithPurchase.NUM = '1';
@@ -119,6 +108,8 @@ const app = new Vue({
             rPhone: '',
             rAdd: '',
             zip: '',
+            product: null,
+            showInfo: false
         }
     },
     created() {
@@ -203,8 +194,8 @@ const app = new Vue({
             .post('./phps/getgwp.php', params).then(function(res) {
                 let data = res.data;
                 app.allGiftWithPurchase = data;
-                app.$nextTick(function() {
-                    if (app.allGiftWithPurchase.length > 2) {
+                if (app.allGiftWithPurchase.length > 2) {
+                    app.$nextTick(function() {
                         $('#gwp').slick({
                             arrows: true,
                             // infinite: true,
@@ -228,8 +219,8 @@ const app = new Vue({
                                 },
                             ]
                         });
-                    }
-                })
+                    })
+                }
                 document.getElementById('loading').style.display = 'none';
             }).catch((error) => { console.error(error) });
         document.forms[0].querySelector('.infoT').querySelectorAll('input').forEach(a => {
@@ -426,6 +417,12 @@ const app = new Vue({
             } else if (value != '') {
                 return 'filled';
             }
+        },
+        addproduct() {
+            this.GiftWithPurchase = this.product;
+            this.GiftWithPurchase.NUM = '1';
+            this.showInfo = false;
+            this.showGiftWithPurchaseList = false;
         }
     },
     computed: {

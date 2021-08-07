@@ -1,4 +1,17 @@
 const storage = sessionStorage;
+jQuery.event.special.touchstart = {
+    setup: function(_, ns, handle) {
+        this.addEventListener("touchstart", handle, { passive: !ns.includes("noPreventDefault") });
+    }
+};
+jQuery.event.special.touchmove = {
+    setup: function(_, ns, handle) {
+        this.addEventListener("touchmove", handle, { passive: !ns.includes("noPreventDefault") });
+    }
+};
+
+
+
 Vue.component('cartItem', {
     data() {
         return {}
@@ -94,6 +107,8 @@ Vue.component('addpriceItem', {
         dropItem() {
             app.addpriceproduct = null;
             storage.removeItem('addpriceproduct');
+            app.showaddpriceproductsList = true;
+
         },
     },
     computed: {
@@ -112,41 +127,30 @@ Vue.component('product-card', {
         }
     },
     template: `
-    <div class="productcard col-xs-12 col-sm-6 col-lg-4">
-        <div class="card_padding">
-            <img :src="product.IMG" alt="" srcset="">
-            <span class="p_name">{{product.NAME}}</span>
-            <p class="p_info">{{product.INFO}}</p>
-            <span class="p_more" @click='showInfo=true'>more</span>
+    <div class="productcard col-md-4 col-sm-6 col-6 " >
+        <div class="card_padding" @click='show'>
+            <img :src="product.IMG" alt="" srcset="" loading="lazy">
+            <span class="p_name" v-html='product.NAME'/>
+            <p class="p_info" v-html='product.INFO'/>
             <div class="price">NT {{product.PRICE}}</div>
-            <input type="button" value="加價購" class="add_cart" @click="addpriceproduct">
-        </div>
-        <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
-            <div>
-                <div class='P_img'>
-                <img :src="product.IMG" alt="" srcset="">
-                </div>
-                <div class='P_info'>
-                    <span class='closeLB' @click='showInfo=false'>×</span>
-                    <h4>{{product.NAME}}</h4>
-                    <p v-html='product.INFO'></p>
-                    <input type="button" value="加價購" class="add_cart" @click="addpriceproduct">
-                </div>
-            </div>
+            <input type="button" value="加入購物車" class="add_cart" @click.stop="addpriceproduct">
         </div>
     </div>
     `,
     methods: {
+        show() {
+            app.product = this.product;
+            app.showInfo = true
+        },
+
         addpriceproduct() {
             app.addpriceproduct = this.product;
             app.addpriceproduct.NUM = '1';
-            this.showInfo = false;
+            app.showInfo = false;
             app.showaddpriceproductsList = false;
         }
 
     },
-    computed: {},
-    watch: {}
 });
 
 
@@ -158,11 +162,14 @@ const app = new Vue({
             addItems: [],
             notice: false,
             addpriceproduct: null,
+            addpriceproducts: null,
             allAddpriceproducts: null,
-            addpriceproductsgrade: null,
             cartShow: false,
             showaddpriceproductsList: true,
             addcartLB: false,
+            showInfo: false,
+            slickactive: false,
+            product: null,
         }
     },
     created() {
@@ -191,6 +198,7 @@ const app = new Vue({
         axios.all([this.getAddPrice()]).then(axios.spread(function(Products) {
             app.allAddpriceproducts = Products.data;
             document.getElementById('loading').style.display = 'none';
+            app.setaddpriceproducts()
         }));
     },
     mounted() {
@@ -225,42 +233,26 @@ const app = new Vue({
             this.addpriceproduct = null;
             this.showaddpriceproductsList = true;
         },
+        setaddpriceproducts() {
+            let total = this.total;
+            let Allproducts = this.allAddpriceproducts;
+            if (total >= 2000 && total < 3000) this.addpriceproducts = Allproducts.filter(p => p.GRADE === '1');
+            else if (total >= 3000 && total < 4000) this.addpriceproducts = Allproducts.filter(p => p.GRADE === '2');
+            else if (total >= 4000) this.addpriceproducts = Allproducts.filter(p => p.GRADE === '3');
+            else this.addpriceproducts = [];
+        },
+        addproduct() {
+            this.addpriceproduct = this.product;
+            this.addpriceproduct.NUM = '1';
+            this.showInfo = false;
+            this.showaddpriceproductsList = false;
+        }
 
     },
     computed: {
-        addpriceproducts() {
-            let products = [];
-            const Allproducts = this.allAddpriceproducts;
-            const total = this.total;
-
-            // if (total >= 2000 && total < 3000) { products = Allproducts.filters(p => p.GRADE === 1); }
-
-
-            for (let i in Allproducts) {
-                if (total >= 2000 && total < 3000) {
-                    if (Allproducts[i].GRADE == 1) {
-                        products.push(Allproducts[i])
-                    };
-                } else if (total >= 3000 && total < 4000) {
-                    if (Allproducts[i].GRADE == 2) {
-                        products.push(Allproducts[i])
-                    };
-                } else if (total >= 4000) {
-                    if (Allproducts[i].GRADE == 3) {
-                        products.push(Allproducts[i])
-                    };
-                } else {
-                    products = [];
-                }
-                return products;
-            }
-        },
         calAll() {
-            if (this.addpriceproduct) {
-                return parseInt(this.total) + parseInt(this.addpriceproduct.PRICE);
-            } else {
-                return this.total
-            }
+            if (this.addpriceproduct) return parseInt(this.total) + parseInt(this.addpriceproduct.PRICE);
+            else return this.total;
         },
         grade() {
             let total = this.total;
@@ -282,6 +274,7 @@ const app = new Vue({
         },
 
 
+
     },
     watch: {
         total: function() {
@@ -291,43 +284,46 @@ const app = new Vue({
             if (this.total > 10000) {
                 app.addcartLBText = '親愛的顧客您好，由於此筆訂單數量較大，請直接電洽專人為您服務，造成不便還請見諒。<br>電話：<a href="tel:+886-3-4751386">03-4751386<a/>';
                 app.addcartLB = true;
-            }
-        },
-        addpriceproducts: function() {
+            };
             this.addpriceproduct = null;
             this.showaddpriceproductsList = false;
-            this.$nextTick(function() {
-                this.showaddpriceproductsList = true; //relaod
-                if (this.addpriceproducts.length > 2) {
-                    this.$nextTick(function() {
-                        $('#addpricelist').slick({
-                            arrows: true,
-                            // infinite: true,
-                            slidesToScroll: 3,
-                            slidesToShow: 3,
-                            responsive: [{
-                                    breakpoint: 600,
-                                    settings: {
-                                        // centerMode: true,
-                                        slidesToScroll: 2,
-                                        slidesToShow: 2,
-                                    }
-                                },
-                                {
-                                    breakpoint: 350,
-                                    settings: {
-                                        // centerMode: true,
-                                        slidesToScroll: 1,
-                                        slidesToShow: 1,
-                                    }
-                                },
-                            ]
-                        });
-                    })
-                }
-            })
+            if (this.allAddpriceproducts != null) { this.setaddpriceproducts() };
 
-
+        },
+        addpriceproducts: function(n) {
+            this.addpriceproduct = null;
+            this.showaddpriceproductsList = true;
+            if (this.slickactive) {
+                $('#addpricelist').slick('unslick')
+                this.slickactive = false;
+            }
+            if (n.length > 2) {
+                this.$nextTick(function() {
+                    $('#addpricelist').slick({
+                        arrows: true,
+                        // infinite: true,
+                        slidesToScroll: 3,
+                        slidesToShow: 3,
+                        responsive: [{
+                                breakpoint: 600,
+                                settings: {
+                                    // centerMode: true,
+                                    slidesToScroll: 2,
+                                    slidesToShow: 2,
+                                }
+                            },
+                            {
+                                breakpoint: 350,
+                                settings: {
+                                    slidesToScroll: 1,
+                                    slidesToShow: 1,
+                                }
+                            },
+                        ]
+                    });
+                    app.slickactive = true;
+                })
+            }
         }
     },
 

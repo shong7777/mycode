@@ -92,10 +92,25 @@
                 <hr style="border-top: 2px solid rgba(0,0,0,.4)">
                 <h3>合計:{{calAll}}</h3>
             </div>
-            <div v-if='total>2000&&showaddpriceproductsList'>
+            <div v-show='total>2000&&showaddpriceproductsList'>
+                <div class="productcard">
+                    <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
+                        <div>
+                            <div class='P_img'>
+                                <img :src="product.IMG" alt="" srcset="" loading="lazy">
+                            </div>
+                            <div class='P_info'>
+                                <span class='closeLB' @click='showInfo=false'>×</span>
+                                <h4 v-html='product.NAME'></h4>
+                                <p v-html='product.INFO'></p>
+                                <input type="button" value="加入購物車" class="add_cart" @click="addproduct">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <h4 class="col-12">滿{{grade}}加價購: </h4>
-                <div class="addpriceList" id="addpricelist">
-                    <product-card v-for='product in addpriceproducts' :product='product'></product-card>
+                <div class="addpriceList row" id="addpricelist" v-show='showaddpriceproductsList'>
+                    <product-card v-for='product in addpriceproducts' :product='product' :key='product.ID'></product-card>
                 </div>
             </div>
             <div class="link">

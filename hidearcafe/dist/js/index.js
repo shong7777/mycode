@@ -30,7 +30,7 @@ Vue.component('product-card', {
         }
     },
     template: `
-    <div class="productcard col-xs-12 col-sm-6 col-lg-4" >
+    <div class="productcard col-xs-12 col-sm-4 col-lg-4" >
         <div class="card_padding" @click='showInfo=true'>
             <img :src="product.IMG" alt="" srcset="" loading="lazy">
             <span class="p_name" v-html='product.NAME'/>

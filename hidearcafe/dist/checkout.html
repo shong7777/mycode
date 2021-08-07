@@ -96,7 +96,22 @@
                             <div style="text-align: center;">
                                 <input type="button" value="選擇其他贈品" @click='changeGWP' class="change" v-if='GiftWithPurchase'>
                             </div>
-                            <div v-if='showGiftWithPurchaseList'>
+                            <div v-show='showGiftWithPurchaseList' class="showGiftWithPurchaseList">
+                                <div class="productcard">
+                                    <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
+                                        <div>
+                                            <div class='P_img'>
+                                                <img :src="product.IMG" alt="" srcset="" loading="lazy">
+                                            </div>
+                                            <div class='P_info'>
+                                                <span class='closeLB' @click='showInfo=false'>×</span>
+                                                <h4 v-html='product.NAME'></h4>
+                                                <p v-html='product.INFO'></p>
+                                                <input type="button" value="加入購物車" class="add_cart" @click="addproduct">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <h4 class="col-12" v-if='total>=2000 && total<3000'>滿2000贈送: </h4>
                                 <h4 class="col-12" v-if='total>=3000 && total<4000'>滿3000贈送: </h4>
                                 <h4 class="col-12" v-if='total>=4000 && total<5000'>滿4000贈送: </h4>
