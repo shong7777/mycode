@@ -25,7 +25,6 @@
 
 <body>
     <div id="game">
-        <!-- <canvas id="gamezone" width="400" height="400"></canvas> -->
         <div class="info">
             <div>現在輪到:<span id="turn"></span></div>
             <div>黑色得分:<span id="score_b">0</span></div>
@@ -108,7 +107,6 @@
                     }
                     blocks.push(b)
                 }
-
             }
 
             function drawCircle(canvas, e) {
@@ -135,7 +133,6 @@
                     }
                     ctx.closePath();
                 }
-
                 let winner = checkwinner(index);
                 if (winner != '') {
                     switch (winner) {
@@ -154,7 +151,7 @@
                         if (confirm('贏家為' + winner + '，再來一場?')) {
                             restartgame()
                         }
-                    }, 10)
+                    }, 50)
                 } else {
                     let unselect = blocks.filter(b => b.select != true);
                     if (unselect.length === 0) {
@@ -162,12 +159,9 @@
                             if (confirm('平手，再來一場?')) {
                                 restartgame()
                             }
-                        }, 10)
+                        }, 50)
                     }
                 }
-
-
-
             }
 
             function checkwinner(i) {
@@ -217,9 +211,6 @@
                     }
                 }
                 return '';
-
-
-
             }
         }
     </script>
