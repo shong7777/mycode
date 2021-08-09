@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #game {
+            display: flex;
+            align-items: center;
+            /* justify-content: space-around; */
+            margin-top: 40px;
+            width: max-content;
+            margin: 40px auto;
+        }
+        
+        .info {
+            width: 200px;
+            margin-left: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="game">
+        <!-- <canvas id="gamezone" width="400" height="400"></canvas> -->
+        <div class="info">
+            <div>現在輪到:<span id="turn"></span></div>
+            <div>黑色得分:<span id="score_b">0</span></div>
+            <div>白色得分:<span id="score_w">0</span></div>
+            <div><input type="button" value="開始遊戲" onclick="startgame()"></div>
+        </div>
+    </div>
+    <script>
+        var canvas;
+        var ctx;
+        window.onload = init;
+
+
+        var circlewidth;
+        var blocks;
+        var turn = '白';
+        var score_w = 0;
+        var score_b = 0;
+
+        function init() {}
+
+        function startgame() {
+            let nctx = document.createElement('canvas');
+            nctx.setAttribute('id', 'gamezone')
+            nctx.setAttribute('width', '400')
+            nctx.setAttribute('height', '400')
+            document.querySelector('#game').prepend(nctx)
+            canvas = document.querySelector('#gamezone')
+            ctx = canvas.getContext("2d");
+            blocks = [];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawgrid(ctx)
+            document.querySelector('#turn').innerText = turn;
+        }
+
+        function restartgame() {
+            document.querySelector('#gamezone').remove()
+            startgame()
+        }
+
+
+        function drawgrid(ctx) {
+            let cols = 3;
+            let rows = 3;
+            let cell_height = canvas.height / rows;
+            let cell_width = canvas.width / cols;
+            circlewidth = cell_width / 2 - 10;
+            ctx.fillStyle = '#03a9f4';
+            ctx.fillRect = (0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#03a9f4";
+            ctx.beginPath();
+            for (let i = 0; i <= cols; i++) {
+                let x = i * cell_width;
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+            }
+            for (let i = 0; i <= rows; i++) {
+                let y = i * cell_height;
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+            }
+            ctx.stroke();
+            ctx.closePath();
+            zoningcanvas()
+            canvas.addEventListener('mousedown', function(e) {
+                drawCircle(canvas, e)
+                document.querySelector('#turn').innerText = turn;
+            })
+
+            function zoningcanvas() {
+                for (let i = 0; i < (cols * rows); i++) {
+                    let b = {
+                        p: {
+                            x: cell_width * i,
+                            y: cell_height * i
+                        },
+                        select: false,
+                        owner: ''
+                    }
+                    blocks.push(b)
+                }
+
+            }
+
+            function drawCircle(canvas, e) {
+                const rect = canvas.getBoundingClientRect()
+                let x = e.clientX - rect.left;
+                let y = e.clientY - rect.top;
+                x = parseInt(x / cell_width);
+                y = parseInt(y / cell_width);
+                let index = x + y * 3;
+                if (blocks[index].select) {
+                    alert('已選取')
+                } else {
+                    blocks[index].select = true;
+                    ctx.beginPath();
+                    ctx.arc((x + 0.5) * cell_width, (y + 0.5) * cell_height, circlewidth, 0, 2 * Math.PI);
+                    if (turn === '白') {
+                        ctx.stroke();
+                        turn = '黑';
+                        blocks[index].owner = '白';
+                    } else {
+                        ctx.fill();
+                        turn = '白';
+                        blocks[index].owner = '黑';
+                    }
+                    ctx.closePath();
+                }
+
+                let winner = checkwinner(index);
+                if (winner != '') {
+                    switch (winner) {
+                        case '白':
+                            score_w++;
+                            document.querySelector('#score_w').innerText = score_w;
+                            turn = '黑';
+                            break
+                        case '黑':
+                            score_b++;
+                            document.querySelector('#score_b').innerText = score_b;
+                            turn = '白';
+                            break
+                    }
+                    setTimeout(() => {
+                        if (confirm('贏家為' + winner + '，再來一場?')) {
+                            restartgame()
+                        }
+                    }, 10)
+                } else {
+                    let unselect = blocks.filter(b => b.select != true);
+                    if (unselect.length === 0) {
+                        setTimeout(() => {
+                            if (confirm('平手，再來一場?')) {
+                                restartgame()
+                            }
+                        }, 10)
+                    }
+                }
+
+
+
+            }
+
+            function checkwinner(i) {
+                for (let i = 0; i < blocks.length; i++) {
+                    if (blocks[i].owner != '') {
+                        switch (i) {
+                            case 0:
+                                if (blocks[i].owner === blocks[i + 3].owner && blocks[i].owner === blocks[i + 3 * 2].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else if (blocks[i].owner === blocks[i + 1].owner && blocks[i].owner === blocks[i + 1 * 2].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else {
+                                    break
+                                }
+                            case 4:
+                                if (blocks[i - 4].owner === blocks[i].owner && blocks[i].owner === blocks[i + 4].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else if (blocks[i - 2].owner === blocks[i].owner && blocks[i].owner === blocks[i + 2].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else if (blocks[i - 1].owner === blocks[i].owner && blocks[i].owner === blocks[i + 1].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else if (blocks[i - 3].owner === blocks[i].owner && blocks[i].owner === blocks[i + 3].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else {
+                                    break
+                                }
+
+                            case 8:
+                                if (blocks[i].owner === blocks[i - 3].owner && blocks[i].owner === blocks[i - 3 * 2].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else if (blocks[i].owner === blocks[i - 1].owner && blocks[i].owner === blocks[i - 1 * 2].owner) {
+                                    return blocks[i].owner
+                                    break
+                                } else {
+                                    break
+                                }
+                            default:
+                                break
+                        }
+                    }
+                }
+                return '';
+
+
+
+            }
+        }
+    </script>
+</body>
+
+</html>

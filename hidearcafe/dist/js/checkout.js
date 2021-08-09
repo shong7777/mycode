@@ -387,22 +387,12 @@ const app = new Vue({
             if (this.sAdd == '') {
                 storage.removeItem('rAdd');
             } else {
+                this.area = this.sarea;
+                this.district = this.sdistrict;
                 storage['rAdd'] = this.rAdd
-                let add = this.sAdd;
-                if (add.slice(0, 1) === '台') add = add.replace('台', '臺')
-                let d = add.substr(0, 3);
-                let area = ['鄉', '鎮', '市', '區']
-                this.district = d;
-                storage['district'] = d;
-                if (area.indexOf(add.slice(5, 6)) > -1) {
-                    this.area = add.slice(3, 6)
-                }
-                if (area.indexOf(add.slice(6, 7)) > -1) {
-                    this.area = add.slice(3, 7)
-                }
+                storage['district'] = this.district;
                 storage['area'] = this.area;
-                let zip = this.selecteddistrict.filter(a => a.name === this.area)[0].zip;
-                this.zip = zip;
+                this.zip = this.szip;
                 storage['zipcode'] = zip;
             }
         },

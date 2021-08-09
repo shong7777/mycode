@@ -130,6 +130,7 @@
                     </div>
                     <div>
                         <label>訂購人電話：</label><br>
+                        <span class="tip">市話區碼請用 - 隔開 範例03-4567890</span><br>
                         <input type="text" name="sPhone" id="sPhone" placeholder="市話或手機 市話區碼請用-隔開 範例03-4578456" @change='saveInfo' v-model='sPhone' class='required'>
                     </div>
                     <div>
@@ -143,7 +144,7 @@
                                 <option value="">請選擇地區</option>
                                 <option :value="area.name" v-for='area in sender_selecteddistrict' :data-zip='area.zip'>{{area.name}}</option>
                             </select>
-                            <span id='szip'>郵遞區號：<input type="text" v-model='szip' name='szipcode' id='szipcode' v-if='area!==""' readonly  class="zipcode"></span>
+                            <span id='szip'>郵遞區號：<input type="text" v-model='szip' name='szipcode' id='szipcode' v-if='sarea!==""' readonly  class="zipcode"></span>
                         </div>
                         <input type="text" name="sAdd" id="sAdd" placeholder="訂購人地址" @change='saveInfo' v-model='sAdd' class='required'>
                     </div>
