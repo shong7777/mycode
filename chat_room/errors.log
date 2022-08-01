@@ -1,0 +1,4 @@
+from:sent_message.php error:SQLSTATE[HY000] [1045] Access denied for user 'roots'@'localhost' (using password: YES)2022/08/01 03:28:17
+from:sent_message.php error:SQLSTATE[HY000] [1045] Access denied for user 'roots'@'localhost' (using password: YES)2022/08/01 03:29:50
+from:get_message.php error:SQLSTATE[HY000] [1049] Unknown database 'chat_room'2022/08/01 08:58:47
+from:sent_message.php error:SQLSTATE[HY000] [1045] Access denied for user 'personalt_chater'@'localhost' (using password: YES)2022/08/01 09:46:24

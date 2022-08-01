@@ -7,13 +7,263 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>聊天室</title>
     <script src="./jquery-3.6.0.js"></script>
+    <style>
+        body {
+            margin: 0;
+            box-sizing: border-box;
+            --btn-radius: 10px;
+            --btn-padding: 10px 15px;
+            --btn-width: 80px;
+            --sent-btn-color: #fff;
+            --sent-btn-bg: #198754;
+            --clear-btn-color: #fff;
+            --clear-btn-bg: rgb(35, 122, 223);
+            --marked-color: red;
+            --content-padding: 15px;
+        }
+
+        input {
+            -webkit-appearance: none;
+            outline: none;
+        }
+
+        .chat-box {
+            background-color: aliceblue;
+            height: 100vh;
+            /* Fallback for browsers that do not support Custom Properties */
+            height: calc(var(--vh, 1vh) * 100);
+
+        }
+
+
+        .content {
+            height: calc(var(--vh, 1vh)*100 - 53px - var(--content-padding) * 2);
+            overflow-y: auto;
+            padding: var(--content-padding);
+        }
+
+        .content>div {
+            display: flex;
+            align-items: end;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+
+        .send-time {
+            font-size: 0.8em;
+            color: darkgray;
+        }
+
+        #loading {
+            padding: var(--content-padding);
+
+        }
+
+        .input-area {
+            padding: 5px;
+            display: flex;
+        }
+
+        .input-area input[type='button'] {
+            border-radius: var(--btn-radius);
+            padding: var(--btn-padding);
+            width: var(--btn-width);
+            margin-left: 5px;
+            outline: none;
+            border: 1px solid;
+            opacity: .9;
+        }
+
+        .input-area input[type='button']:hover {
+            opacity: 1;
+        }
+
+        input.message-box {
+            padding: var(--btn-padding);
+            width: 100%;
+            font-size: initial;
+        }
+
+        input.sent {
+            background-color: var(--sent-btn-bg);
+            color: var(--sent-btn-color);
+        }
+
+        input.clear {
+            background-color: var(--clear-btn-bg);
+            color: var(--clear-btn-color);
+        }
+
+        .content .font-marked {
+            color: var(--marked-color);
+        }
+    </style>
 </head>
 
-<body>
+<body onUnload="myClose">
+    <div class="chat-box" id="chat_box">
+        <div id="loading">加入聊天室中，請稍後...</div>
+    </div>
     <script>
         const session = sessionStorage;
+        var timer;
         $(function () {
-            session['test'] = '123';
+            //調整支援safari高度
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            //開啟網頁時要求輸入暱稱，已輸入的暱稱存放在session不須重新輸入
+            var nickname, checktime;
+            checktime = 5000;
+            if (!session['nickname']) {
+                nickname = prompt('請輸入暱稱', '路人甲');
+                while (!nickname) {
+                    nickname = prompt('請輸入暱稱', '路人甲')
+                }
+                session['nickname'] = nickname;
+                alert('歡迎加入，' + nickname)
+            } else {
+                nickname = session['nickname'];
+                alert('歡迎回來，' + nickname)
+            }
+            //暱稱確認加入聊天室
+
+            joinRoom()
+
+
+            function joinRoom() {
+                $.ajax({
+                    type: "POST",
+                    data: { 'nickname': nickname },
+                    url: 'join_room.php',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response['message'].includes('系統訊息')) {
+                            $('#loading').hide();
+                            showContent();
+                            writeContent(response);
+
+
+                        }
+                    },
+                    error: function (thrownError) {
+                        console.log(thrownError);
+                    }
+                }).then(() => {
+                    $('#sent').click(function () { sendMessage() })
+                    $("#massage_box").keydown(function (event) {
+                        if (event.keyCode == 13) {
+                            sendMessage();
+                        };
+                    });
+                    $('#clear').click(function () {
+                        $('#massage_box').val('');
+                    })
+                    timer = setTimeout(() => {
+                        checkChat()
+                    }, checktime);
+                });
+            }
+
+            function showContent() {
+                $('#chat_box').html(`
+                    <div>
+                        <div class="content" id='content'></div>
+                        <div class="input-area">
+                            <input type="text" name="" id="massage_box" class="message-box">
+                            <input type="button" class="sent" value="送出訊息" id="sent">
+                            <input type="button" class='clear' value="清除" id="clear">
+                        </div>
+                    </div>`);
+
+
+            }
+            function writeContent(message) {
+                console.log(message)
+                let div;
+                if (message['message'].includes('系統訊息')) {
+                    div = "<div class='font-marked'>" + message['message'] + `&nbsp;&nbsp;&nbsp;<div class="send-time">${message['date']}</div>` + "</div>";
+                } else {
+                    div = "<div class='content-text'>" + message['sender'] + "說：" + message['message'] + `&nbsp;&nbsp;&nbsp;<div class="send-time">${message['date']}</div>` + "</div>"
+                }
+                $('#content').append(div)
+
+
+            }
+
+            function checkChat() {
+                clearTimeout(timer);
+                $.ajax({
+                    type: "GET",
+                    url: 'get_message.php',
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log(response)
+                        if (response != []) {
+                            response.forEach(element => {
+                                writeContent(element)
+                            });
+                        }
+                        timer = setTimeout(() => {
+                            console.log('刷新聊天')
+                            checkChat()
+                        }, checktime);
+                    },
+                    error: function (thrownError) {
+                        console.log(thrownError);
+                    }
+                });
+
+            }
+
+            function sendMessage() {
+                if ($('#massage_box').val().includes('系統訊息')) {
+                    alert('訊息內不得含有"系統訊息"文字。')
+                    return false;
+                } else if ($('#massage_box').val() == '') {
+                    alert('訊息不得為空白。')
+                    return false;
+                } else if ($('#massage_box').val().length > 50) {
+                    alert('文字長度不得超過50字元。')
+                    return false;
+                }
+                //停止自動刷新timer
+                clearTimeout(timer);
+
+                //暫停送出，直到response回覆
+                $('#sent').off().click(function () { alert('訊息傳送中，請稍後。') });
+                $("#massage_box").off().keydown(function (event) {
+                    if (event.keyCode == 13) { alert('訊息傳送中，請稍後。') };
+                });
+                $.ajax({
+                    type: "POST",
+                    url: 'sent_message.php',
+                    data: { 'message': ($('#massage_box').val()) },
+                    dataType: 'text',
+                    success: function (response) {
+                        console.log(response)
+                        if (response == '違規操作') {
+                            alert('違規操作')
+                        } else if (response != 'done') {
+                            alert('訊息傳送失敗，請重新操作。')
+                        } else {
+                            //清空輸入區
+                            $('#massage_box').val('');
+                        }
+                    },
+                    error: function (thrownError) {
+                        console.log(thrownError);
+                        alert('訊息傳送失敗，請重新操作。')
+                    }
+                }).then(function () {
+                    checkChat()
+                    $('#sent').off().click(function () { sendMessage() })
+                    $("#massage_box").off().keydown(function (event) {
+                        if (event.keyCode == 13) { sendMessage() };
+                    });
+                });
+            }
+
+
         });
 
 
