@@ -20,6 +20,8 @@
             --clear-btn-bg: rgb(35, 122, 223);
             --marked-color: red;
             --content-padding: 15px;
+            --content-text-color: black;
+            --content-bg-color: aliceblue;
         }
 
         input {
@@ -28,7 +30,7 @@
         }
 
         .chat-box {
-            background-color: aliceblue;
+            background-color: var(--content-bg-color);
             height: 100vh;
             /* Fallback for browsers that do not support Custom Properties */
             height: calc(var(--vh, 1vh) * 100);
@@ -42,11 +44,24 @@
             padding: var(--content-padding);
         }
 
+        .content-text {
+            color: var(--content-text-color);
+        }
+
         .content>div {
             display: flex;
             align-items: end;
             flex-wrap: wrap;
             margin-bottom: 5px;
+
+        }
+
+        div.change-color {
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            display: grid;
+            grid-gap: 5px;
         }
 
         .send-time {
@@ -64,6 +79,7 @@
             display: flex;
         }
 
+        .change-color input,
         .input-area input[type='button'] {
             border-radius: var(--btn-radius);
             padding: var(--btn-padding);
@@ -72,6 +88,20 @@
             outline: none;
             border: 1px solid;
             opacity: .9;
+        }
+
+        .change-color input {
+            opacity: 0.3;
+            transition: .5s;
+        }
+
+        #night-mod {
+            color: #fff;
+            background-color: black;
+        }
+
+        .change-color input:hover {
+            opacity: 0.9;
         }
 
         .input-area input[type='button']:hover {
@@ -100,10 +130,11 @@
     </style>
 </head>
 
-<body onUnload="myClose">
+<body>
     <div class="chat-box" id="chat_box">
         <div id="loading">加入聊天室中，請稍後...</div>
     </div>
+
     <script>
         const session = sessionStorage;
         var timer;
@@ -115,8 +146,10 @@
             var nickname, checktime;
             checktime = 5000;
             if (!session['nickname']) {
-                nickname = prompt('請輸入暱稱', '路人甲');
-                while (!nickname) {
+                //暱稱不得為空白且20字以下
+                nickname = prompt('請輸入暱稱(20字元以下)', '路人甲');
+                while (!nickname || nickname.length > 20) {
+                    alert('暱稱不得為空白，且須為20字以下。')
                     nickname = prompt('請輸入暱稱', '路人甲')
                 }
                 session['nickname'] = nickname;
@@ -141,12 +174,11 @@
                             $('#loading').hide();
                             showContent();
                             writeContent(response);
-
-
                         }
                     },
                     error: function (thrownError) {
                         console.log(thrownError);
+                        alert('系統錯誤')
                     }
                 }).then(() => {
                     $('#sent').click(function () { sendMessage() })
@@ -167,15 +199,26 @@
             function showContent() {
                 $('#chat_box').html(`
                     <div>
-                        <div class="content" id='content'></div>
+                        <div class="content" id='content'>
+                            <div class="change-color">
+                                <input type="button" value="白日模式" id="day-mod">
+                                <input type="button" value="夜間模式" id="night-mod">
+                            </div>
+                        </div>
                         <div class="input-area">
                             <input type="text" name="" id="massage_box" class="message-box">
                             <input type="button" class="sent" value="送出訊息" id="sent">
                             <input type="button" class='clear' value="清除" id="clear">
                         </div>
                     </div>`);
-
-
+                $('#day-mod').click(function () {
+                    console.log('切換日間模式')
+                    $('body').css({ '--content-bg-color': 'aliceblue', '--content-text-color': 'black', '--marked-color': 'red' })
+                })
+                $('#night-mod').click(function () {
+                    console.log('切換夜間模式')
+                    $('body').css({ '--content-bg-color': 'black', '--content-text-color': '#fff', '--marked-color': '#28ffcd' })
+                })
             }
             function writeContent(message) {
                 console.log(message)

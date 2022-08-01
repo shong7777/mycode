@@ -5,9 +5,9 @@ try {
     require_once("./connect.php");
         $message= htmlspecialchars($_POST['message']);
         //驗證是否超過50字
-        // if( mb_strlen($message,"utf-8") > 50){
-        //     exit("違規操作");
-        // };
+        if( mb_strlen($message,"utf-8") > 50){
+            exit("違規操作");
+        };
         $nickname=$_SESSION['nickname'];       
         $time=date('Y/m/d H:i:s');
         $sql = "INSERT INTO `chat_log` (`ID`, `sender`, `message`, `date`) VALUES (NULL, :nickname, :message , :time);";

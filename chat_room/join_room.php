@@ -1,6 +1,10 @@
 <?
 session_start();
 // $_POST['nickname']='兔兔';
+    //  驗證是否超過20字
+        if( mb_strlen($_POST['nickname'],"utf-8") > 20){
+            exit("違規操作");
+        };
 $_SESSION['nickname']=$_POST['nickname'];
 $nickname=$_SESSION['nickname'];        
 $_POST['message']='系統訊息：'.$nickname.'加入了聊天室。';
