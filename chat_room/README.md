@@ -1,5 +1,5 @@
-面試題-文字聊天室
-
+面試題-文字聊天室  
+網址: https://personaltestdebug.mx500.com/chat_room/chat_room.html  
 使用ajax介接php PDO 用以查詢、新增mysql資料  
 以前端網頁定時request刷新會話內容  
 首次開啟網頁需輸入暱稱才能加入聊天室，暱稱儲存在session以供調用，session未消失前重複登入不須重新輸入暱稱。  
