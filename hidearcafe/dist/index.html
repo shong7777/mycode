@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HiDearcafe2553-咖啡,甜點,桃園,楊梅</title>
-    <meta name="Description" CONTENT="HiDearCafe2553 手工派、咖啡，宅配專賣。電話：03-4751386  地址：326桃園市楊梅區自強街2號" />
+    <title>HiDearcafe</title>
+    <meta name="Description" CONTENT="HiDearCafe2553 手工派、咖啡，宅配專賣。電話：03-450000000  地址：326桃園市楊梅區" />
     <meta name="keywords" content="甜點
 手工派
 咖啡
@@ -30,88 +30,89 @@ HiDear Cafe
 
 <body>
     <div id="loading">
-    <div class="loadingio-spinner-spinner-bymfanlw6e">
-        <div class="ldio-dwsc5f948su">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+        <div class="loadingio-spinner-spinner-bymfanlw6e">
+            <div class="ldio-dwsc5f948su">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         </div>
     </div>
-</div>
     <div id="app">
         <header class="container-fluid">
-    <div class="col-5 col-sm-4">
-        <a href="./index.html">
-            <h1><img src="./images/logo.png" alt="hidearcafe2553" srcset="" id="logo"></h1>
-        </a>
-    </div>
-    <div id="h_function" class="col-lg-2 offset-lg-4 col-sm-3 offset-sm-2 col-7">
-        <div>
-            <a href="./cart.html" id="bag">
-                <img src="./images/001-shopping-bag.svg" alt="這是購物車" srcset="">
-                <span v-if='addItemList'>{{addItemList.length}}</span>
-            </a>
-        </div>
-        <button class="hamburger hamburger--elastic " type="button" id="hamburger">
-            <span class="hamburger-box">
-              <span class="hamburger-inner"></span>
-            </span>
-        </button>
-        <nav id="nav" class="nav">
-            <ul>
-                <li><a href="./about.html"><span>關於我們</span></a></li>
-                <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button id="checking_orderBtn">查詢訂單</button></li>
-                <li @click='notice=true' style="cursor: pointer;">購買須知</li>
-                <div id="notice" v-if="notice" @click.self='notice=false'>
-                    <div id="noticeText">
-                        <span class='closeLB' @click='notice=false'>×</span>
-                        <h3>甜點怎麼樣最好吃?</h3>
-                        <ul>
-                            <li>外帶宅配到家建議先冰一小時</li>
-                            <li>沒有馬上要吃一定要先冰冷藏</li>
-                            <li>有新鮮水果款的建議不要放超過三天喔</li>
-                            <li>生巧克力／起司乳酪系列建議冷藏不要超過七天</li>
-                        </ul>
-                        <h3>那麼磅蛋糕跟其他常溫小點心呢？</h3>
-                        <ul>
-                            <li>冷藏可以保存一星期喔</li>
-                            <li>拿到常溫環境中就在今天內吃掉它吧</li>
-                        </ul>
-                        <!-- <img src="./images/89833.jpg" alt="" srcset=""> -->
-                        <!-- <p>最佳賞味期:到貨隔天(製作後三日)<br> 請冷藏一周內食用完畢<br> 滿2000免運
-                        </p> -->
-                        <h4>滿2000免運</h4>
-                    </div>
+            <div class="col-5 col-sm-4">
+                <a href="./index.html">
+                    <h1><img src="./images/logo.png" alt="hidearcafe2553" srcset="" id="logo"></h1>
+                </a>
+            </div>
+            <div id="h_function" class="col-lg-2 offset-lg-4 col-sm-3 offset-sm-2 col-7">
+                <div>
+                    <a href="./cart.html" id="bag">
+                        <img src="./images/001-shopping-bag.svg" alt="這是購物車" srcset="">
+                        <span v-if='addItemList'>{{addItemList.length}}</span>
+                    </a>
                 </div>
-            </ul>
-        </nav>
-    </div>
-</header>
-<div class="headerspace"></div>
+                <button class="hamburger hamburger--elastic " type="button" id="hamburger">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+                <nav id="nav" class="nav">
+                    <ul>
+                        <li><a href="./about.html"><span>關於我們</span></a></li>
+                        <li><input type="text" placeholder="請輸入訂單號碼" id="checking_order"><button
+                                id="checking_orderBtn">查詢訂單</button></li>
+                        <li @click='notice=true' style="cursor: pointer;">購買須知</li>
+                        <div id="notice" v-if="notice" @click.self='notice=false'>
+                            <div id="noticeText">
+                                <span class='closeLB' @click='notice=false'>×</span>
+                                <h3>甜點怎麼樣最好吃?</h3>
+                                <ul>
+                                    <li>外帶宅配到家建議先冰一小時</li>
+                                    <li>沒有馬上要吃一定要先冰冷藏</li>
+                                    <li>有新鮮水果款的建議不要放超過三天喔</li>
+                                    <li>生巧克力／起司乳酪系列建議冷藏不要超過七天</li>
+                                </ul>
+                                <h3>那麼磅蛋糕跟其他常溫小點心呢？</h3>
+                                <ul>
+                                    <li>冷藏可以保存一星期喔</li>
+                                    <li>拿到常溫環境中就在今天內吃掉它吧</li>
+                                </ul>
+                                <!-- <img src="./images/89833.jpg" alt="" srcset=""> -->
+                                <!-- <p>最佳賞味期:到貨隔天(製作後三日)<br> 請冷藏一周內食用完畢<br> 滿2000免運
+                        </p> -->
+                                <h4>滿2000免運</h4>
+                            </div>
+                        </div>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <div class="headerspace"></div>
         <div class=" container">
             <!-- <img src="https://picsum.photos/500/300" alt="" onload="console.log('imgdone')"> -->
             <transition name='slide'>
-    <div id="cartBg" v-show="cartShow" @click.self='cartShow=false'>
-        <div id="cart">
-            <div class="itemList">
-                <cart-item v-for='product in addItems' :product='product' :key='product.ID'></cart-item>
-            </div>
-            <div class="check">
-                <div>總計:<span>{{total}}</span></div>
-                <a href="./cart.html">結帳</a>
-            </div>
-        </div>
-    </div>
-</transition>
+                <div id="cartBg" v-show="cartShow" @click.self='cartShow=false'>
+                    <div id="cart">
+                        <div class="itemList">
+                            <cart-item v-for='product in addItems' :product='product' :key='product.ID'></cart-item>
+                        </div>
+                        <div class="check">
+                            <div>總計:<span>{{total}}</span></div>
+                            <a href="./cart.html">結帳</a>
+                        </div>
+                    </div>
+                </div>
+            </transition>
             <div id='addcartLB' v-show="addcartLB" @click.self='addcartLB=false' class="LB">
                 <div>
                     <span id='closeLB' @click='addcartLB=false'>×</span>
@@ -125,7 +126,8 @@ HiDear Cafe
                 <div>
                     <img src="./images/103812.jpg" alt="宣傳圖">
                 </div>
-                <adv-item v-for="product in advs" :key="product.ID" :product='product' /></adv-item>
+                <adv-item v-for="product in advs" :key="product.ID" :product='product' />
+                </adv-item>
             </div>
             <adv-lightbox :product='advproduct' v-show='advInfo'></adv-lightbox>
             <div class="products">
@@ -141,30 +143,31 @@ HiDear Cafe
                         </select>
                         <div v-show='productloading' class="productloading">
                             <div id="loading">
-    <div class="loadingio-spinner-spinner-bymfanlw6e">
-        <div class="ldio-dwsc5f948su">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
-</div>
+                                <div class="loadingio-spinner-spinner-bymfanlw6e">
+                                    <div class="ldio-dwsc5f948su">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="product-page">
                             <div class="product-list row">
                                 <product-card v-for="product in PerpageProduct" :product='product' :key="product.ID" />
                             </div>
                             <ul class="page">
-                                <li v-for="(page,index) in pages"><a href="#" :class="selectedPage(page)" @click.prevent="nowpage=page;changePage()">{{page}}</a></li>
+                                <li v-for="(page,index) in pages"><a href="#" :class="selectedPage(page)"
+                                        @click.prevent="nowpage=page;changePage()">{{page}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -174,30 +177,31 @@ HiDear Cafe
                         </select>
                         <div v-show='productloading' class="productloading">
                             <div id="loading">
-    <div class="loadingio-spinner-spinner-bymfanlw6e">
-        <div class="ldio-dwsc5f948su">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
-</div>
+                                <div class="loadingio-spinner-spinner-bymfanlw6e">
+                                    <div class="ldio-dwsc5f948su">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="product-page">
                             <div class="product-list row">
                                 <product-card v-for="product in PerpageProduct2" :product='product' :key="product.ID" />
                             </div>
                             <ul class="page">
-                                <li v-for="(page,index) in pages2"><a href="#" :class="selectedPage2(page)" @click.prevent="nowpage2=page;changePage()">{{page}}</a></li>
+                                <li v-for="(page,index) in pages2"><a href="#" :class="selectedPage2(page)"
+                                        @click.prevent="nowpage2=page;changePage()">{{page}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -206,14 +210,15 @@ HiDear Cafe
             </div>
         </div>
         <footer>
-    <h5>Copyright 2021 HiDearCafe All Rights Reserved.</h5>
-    <div class="add">
-        <p>訂購專線：03-4751386</p>
-        <p>營業時間：上午11:00 - 下午9:00(每周一、二公休)</p>
-        <p>地址：326桃園市楊梅區自強街2號</p>
-        <a href="https://lin.ee/t1QcyJp"><img height="36" border="0" src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"></a>
-    </div>
-</footer>
+            <h5>Copyright 2021 HiDearCafe All Rights Reserved.</h5>
+            <div class="add">
+                <p>訂購專線：03-45000000</p>
+                <p>營業時間：上午11:00 - 下午9:00(每周一、二公休)</p>
+                <p>地址：326桃園市楊梅區</p>
+                <a href="https://lin.ee/t1QcyJp"><img height="36" border="0"
+                        src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png"></a>
+            </div>
+        </footer>
     </div>
     <script src="./js/bag.js?ver1.4"></script>
     <script src="./js/index.js"></script>
