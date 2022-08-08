@@ -1,34 +1,29 @@
 Vue.component('cartItem', {
     props: ['product'],
-    created() {
-        console.log(this.product);
-        this.PRICE = this.product.PRICE;
-        this.NUM = this.product.NUM;
-    },
     data() {
         return {
-            NUM: null,
-            PRICE: null,
+            num: this.product.NUM,
         }
     },
     template: `<div class="cart-item row">
                 <div class="item_img col-4 col-sm-4">
                     <img :src="product.IMG" alt="" loading="lazy">
                 </div>
-                <div class="item_info col-7 row">
-                    <span class=' col-12' v-html='product.NAME'/>
-                    <span class='col-sm-6 col-12'>數量：<input type="number" name="" id="" class="itemNum"  v-model="product.NUM" max='20' min='1' @change="NUM=product.NUM"></span>
+                <div class="item_info col-8 row">
+                    <span class=' col-12'>{{product.NAME}}<span v-if='product.SPEC!=""'>({{product.SPEC}})</span></span>
+                    <div class='col-sm-12 col-12'>數量：<span class='quantity' @click='num>1?num-=1:1'>-</span><input type="number" class="itemNum"  v-model="num" :max='max' min='1' inputmode="numeric"><span class='quantity'  @click='num<100?num+=1:99'>+</span></div>
                     <div class="item_price col-sm-6 col-12">
                         <span>小計:</span>
                         <span>{{subtotal}}</span>
                     </div>
                 </div>
-                <span class="dropitem col-1" @click="dropItem">&#10005;</span>
+                <div class='dropitem-wrap'>
+                 <span class="dropitem" @click="dropItem">&#10005;</span>
+                </div>
             </div>`,
 
     methods: {
         dropItem() {
-            this.num = 0;
             storage.removeItem(this.product.ID);
             let list = storage['addItemList'].split(',');
             list.pop();
@@ -44,28 +39,36 @@ Vue.component('cartItem', {
             app.addItemList.pop();
             app.caltotal();
         },
-        startbar() {
-            console.log('start');
-        },
-        movebar(e) {
-            console.log('move')
-            console.log(e.path[0])
-            console.log(e.touches.length);
-        },
     },
     computed: {
         subtotal() {
-            return this.PRICE * this.NUM;
+            return this.product.PRICE * parseInt(this.num);
         },
+        max() {
+            let max = this.product.STOCK | 99;
+            return parseInt(max)
+        }
     },
     watch: {
-        subtotal: function() {
-            let info = storage[this.product.ID].split('|');
-            info.splice(5, 1);
-            info.push(this.product.NUM);
-            info = info.join('|');
-            storage[this.product.ID] = info;
-            app.caltotal();
-        },
+        num: {
+            handler: function (n) {
+                if (parseInt(n) > this.max) {
+                    this.num = this.max;
+                    this.product.NUM = this.num;
+                } else if (isNaN(parseInt(n))) {
+                    this.num = 1;
+                    this.product.NUM = this.num;
+                } else {
+                    this.product.NUM = this.num;
+                }
+                let info = storage[this.product.ID].split('|');
+                info.pop();
+                info.push(this.product.NUM);
+                info = info.join('|');
+                storage[this.product.ID] = info;
+                app.caltotal();
+            },
+            deep: true,
+        }
     }
 });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
@@ -30,8 +30,22 @@
             top: 0;
             right: 0;
         }
+        
+        #img {
+            max-width: 300px;
+        }
+        
+        .coupon-result {
+            width: max-content;
+            margin: auto;
+            list-style: none;
+        }
     </style>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/jquery-3.5.1.min.js"></script>
+    <script src="./vendors/croppie/croppie.min.js"></script>
+    <link rel="stylesheet" href="./vendors/croppie/croppie.css">
+
 </head>
 
 <body>
@@ -44,8 +58,9 @@
 					<option value="product">商品</option>
 					<option value="addprice">加價購</option>
 					<option value="gift_with_purchase">滿額贈</option>
+					<option value="diveaway">折價券贈品</option>
 					<option value="adv">廣告</option>
-					<option value="coupon">折價碼</option>
+					<option value="coupon">折價卷</option>
 				</select></td>
             </tr>
             <tr id="class">
@@ -76,10 +91,20 @@
                 <th>類型</th>
                 <td><input type="text" name="type"></td>
             </tr>
+            <tr id="stock">
+                <th>庫存</th>
+                <td><input type="number" name="stock"></td>
+            </tr>
+            <tr id="spec">
+                <th>規格</th>
+                <td><input type="text" name="spec"></td>
+            </tr>
             <tr id="upImg">
                 <th>商品圖片</th>
                 <td>上傳檔案:<input type="file" name="upFile" accept="image/*"><br>
                     <input type="hidden" name="img">
+                    <div id='croppiediv'></div>
+                    <div>預覽圖：</div>
                     <img src="" alt="" id="img">
                 </td>
 
@@ -92,17 +117,36 @@
 					<option value="0">小</option>
 				</select></td>
             </tr>
+            <tr id='delivery'>
+                <th>宅配類型</th>
+                <td><select name="delivery">
+					<option value="0">常溫</option>
+					<option value="1">冷藏</option>
+					<option value="2">冷凍</option>
+				</select></td>
+            </tr>
             <tr id='info'>
                 <th>商品資訊</th>
                 <td><textarea name="info" id="" cols="30" rows="10"></textarea></td>
             </tr>
             <tr id='product_no' class="hide">
                 <th>廣告商品編號</th>
-                <td><input type="text" name="product_no"></td>
+                <td><select name="product_no" onfocus='this.size=10;' onblur='this.size=1;' onchange='this.size=1; this.blur();'></select></td>
+            </tr>
+            <tr id='diveaway_no' class="hide">
+                <th>折價卷商品編號</th>
+                <td><select name="diveaway_no" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                <option value="null">無</option></select></td>
             </tr>
             <tr id='text' class="hide">
                 <th>折扣碼</th>
-                <td><input type="text" name="text"></td>
+                <td><input type="text" name="text"><br> 自動生成：
+                    <input type="checkbox" name="textauto" id="textauto">
+                    <div class="hide" id="textautonum">
+                        生成筆數：
+                        <input type="number" name="textautonum" value="1" min="1" style="width:50px">
+                    </div>
+                </td>
             </tr>
             <tr id='discount' class="hide">
                 <th>折扣</th>
@@ -113,11 +157,17 @@
             </tr>
         </table>
     </form>
+    <ul class="coupon-result hide">
+        <h2>
+            折扣碼:
+        </h2>
+    </ul>
     <div id="processing" class="hide">
         <p>&nbsp;&nbsp;&nbsp;&nbsp;新增中...請稍後...</p>
     </div>
+    <!-- <script src="./js/jquery-3.5.1.min.js"></script> -->
     <script src="./js/modules/deelimage.js"></script>
-    <script src="./js/prodInsert.js"></script>
+    <script src="./js/prodInsert.js?ver2.1"></script>
 </body>
 
 </html>

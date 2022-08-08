@@ -34,6 +34,7 @@ const app = new Vue({
             gwpproducts: [],
             orderNo: null,
             cartShow: false,
+            diveaway: null,
         }
     },
     created() {
@@ -60,6 +61,7 @@ const app = new Vue({
                 app.products = data[1];
                 app.addpriceproducts = data[2];
                 app.gwpproducts = data[3];
+                app.diveaway = data[4];
             }).catch((error) => { console.error(error) });
         document.getElementById('loading').style.display = 'none';
 
@@ -81,4 +83,16 @@ const app = new Vue({
             window.location.href = "./index.html";
         }
     },
+    computed: {
+        DELIVERY_METHOD() {
+            switch (this.orderinfo.DELIVERY_METHOD) {
+                case '0':
+                    return '常溫宅配';
+                case '1':
+                    return '冷藏宅配';
+                case '2':
+                    return '冷凍宅配';
+            }
+        }
+    }
 });

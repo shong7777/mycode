@@ -1,4 +1,10 @@
 const storage = sessionStorage;
+
+function storageValue(product) {
+    let spec = product.SPEC != '' ? product.SPEC : 'null';
+    product.NUM = 1;
+    return product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.SIZE + '|' + product.PRICE + '|' + product.STOCK + '|' + product.DELIVERY_METHOD + '|' + spec + '|' + product.NUM;
+}
 Vue.component('adv-item', {
     props: ['product'],
     data() {
@@ -17,8 +23,6 @@ Vue.component('adv-item', {
             app.advInfo = true;
         }
     },
-    computed: {},
-    watch: {}
 });
 //單一商品的卡片
 Vue.component('product-card', {
@@ -26,30 +30,19 @@ Vue.component('product-card', {
     data() {
         return {
             showInfo: false,
-
         }
     },
     template: `
     <div class="productcard col-xs-12 col-sm-4 col-lg-4" >
-        <div class="card_padding" @click='showInfo=true'>
-            <img :src="product.IMG" alt="" srcset="" loading="lazy">
-            <span class="p_name" v-html='product.NAME'/>
+        <div class="card_padding" @click='changeshowInfo'>
+            <img :src="product.IMG" :alt="product.TYPE" srcset="" loading="lazy">
+            <span class="p_name" >{{product.NAME}}<span v-if='product.SPEC!=""'>({{product.SPEC}})</span></span>
             <p class="p_info" v-html='product.INFO'/>
             <div class="price">NT {{product.PRICE}}</div>
             <input type="button" value="加入購物車" class="add_cart" @click.stop="addCart">
         </div>
         <div class='infoLB' v-if="showInfo" @click.self='showInfo=false'>
-            <div>
-                <div class='P_img'>
-                <img :src="product.IMG" alt="" srcset="" loading="lazy">
-                </div>
-                <div class='P_info'>
-                    <span class='closeLB' @click='showInfo=false'>×</span>
-                    <h4 v-html='product.NAME'/>
-                    <p v-html='product.INFO'></p>
-                    <input type="button" value="加入購物車" class="add_cart" @click="addCart">
-                </div>
-            </div>
+            <product-lightbox   :product='product' :addCart='addCart' :changeshowInfo='changeshowInfo'/>
         </div>
     </div>
     `,
@@ -66,14 +59,16 @@ Vue.component('product-card', {
                 app.addItems.push(this.product);
                 app.addcartLBText = '已加入購物車。';
                 app.addcartLB = true;
-                app.caltotal();
             }
         },
+        changeshowInfo() {
+            this.showInfo = this.showInfo ? false : true;
+        }
     },
     computed: {
         Value() {
-            let product = this.product;
-            return product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.SIZE + '|' + product.PRICE + '|1';
+            let value = storageValue(this.product);
+            return value;
         },
     },
     watch: {
@@ -82,6 +77,65 @@ Vue.component('product-card', {
         }
     }
 });
+
+//商品LB
+
+Vue.component('product-lightbox', {
+    props: ['product', 'addCart', 'changeshowInfo'],
+    template: `
+    <div>
+        <div class='P_img'>
+        <img :src="product.IMG" alt="商品圖片" srcset="" loading="lazy">
+        </div>
+        <div class='P_info'>
+            <span class='closeLB' @click='changeshowInfo'>×</span>
+            <h4>{{product.NAME}}<span v-if='product.SPEC!=""'>({{product.SPEC}})</span></h4>
+            <p v-html='product.INFO'></p>
+            <input type="button" value="加入購物車" class="add_cart" @click="addCart">
+            <div  :class="{stock:true,  shortage: isShortage }" v-if='product.STOCK!=null'>尚餘庫存：{{product.STOCK}}</div>
+        </div>
+    </div>`,
+    computed: {
+        isShortage() {
+            return parseInt(this.product.STOCK) <= 2 ? true : false;
+        }
+    }
+})
+
+//廣告LB外包div
+
+Vue.component('adv-lightbox', {
+    props: ['product'],
+    template: `
+        <div class='infoLB advLB'  @click.self='changeadvInfo' v-if='product'>
+            <product-lightbox :product='product' :addCart='addAdvItem' :changeshowInfo='changeadvInfo' />
+        </div>
+  `,
+    methods: {
+
+        addAdvItem() {
+            let product = this.product;
+            if (storage[product.ID]) {
+                app.addcartLBText = '已經在購物車內囉。';
+                app.addcartLB = true;
+            } else {
+                storage[product.ID] = storageValue(this.product);
+                storage['addItemList'] += product.ID + ',';
+                app.addItemList.push(product.ID);
+                app.advproduct.NUM = 1;
+                app.addItems.push(product);
+                app.addcartLBText = '已加入購物車。';
+                app.addcartLB = true;
+                app.caltotal();
+            }
+        },
+        changeadvInfo() {
+            app.advInfo = app.advInfo ? false : true;
+        },
+    }
+})
+
+
 const app = new Vue({
     el: "#app",
     data() {
@@ -123,27 +177,23 @@ const app = new Vue({
                         ID: info[0],
                         NAME: info[1],
                         IMG: info[2],
-                        SIZE: info[3],
-                        PRICE: info[4],
-                        NUM: info[5]
+                        SIZE: parseInt(info[3]),
+                        PRICE: parseInt(info[4]),
+                        STOCK: parseInt(info[5]),
+                        DELIVERY_METHOD: parseInt(info[6]),
+                        SPEC: info[7] === 'null' ? '' : info[7],
+                        NUM: parseInt(info[8])
                     };
+
                 Allproducts.push(obj);
             }
             this.addItems = Allproducts;
         } else {
             storage['addItemList'] = '';
         };
-        //靜待網頁資料開始
-        // this.type = ["塔", "蛋糕"];
-        // this.type2 = ["巴西", "瓜地馬拉", "哥倫比亞"];
-        // axios
-        //     .get('./js/product.json')
-        //     .then(response => { this.Allproducts = response.data })
-        // this.advs = [{ "ADV_ID": "10001", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10001", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 1", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10002", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10002", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 2", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10003", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10003", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 3", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }, { "ADV_ID": "10004", "ADV_IMG": ".\/images\/adv.jpg", "ID": "P10007", "NAME": "商品名稱商品名稱商品名稱商品名稱商品名稱商品名稱 塔 7", "IMG": ".\/images\/tart.png", "PRICE": "720", "TYPE": "塔", "SIZE": "1", "INFO": "商品介紹 內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容內容", "CLASS": "甜點" }];
-        //靜態網頁資料結束
 
         axios
-            .all([this.getProducts(this.whatorderby), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
+            .all([this.getProducts(), this.getShoppingAdv(), ]).then(axios.spread(function(Products, ShoppingAdv) {
                 app.Allproducts = Products.data[0];
                 let type = [];
                 for (let i in Products.data[1]) {
@@ -183,7 +233,10 @@ const app = new Vue({
     },
     mounted() {
         this.caltotal();
-
+        document.querySelector('#bag').addEventListener('click', (e) => {
+            e.preventDefault()
+            app.cartShow = true;
+        })
     },
     methods: {
         getProducts(orderby) {
@@ -217,23 +270,7 @@ const app = new Vue({
                 selected_a: this.nowpage2 == page,
             }
         },
-        addAdvItem() {
-            if (storage[this.advproduct.ID]) {
-                app.addcartLBText = '已經在購物車內囉。';
-                app.addcartLB = true;
-            } else {
-                let product = this.advproduct;
-                let value = product.ID + '|' + product.NAME + '|' + product.IMG + '|' + product.SIZE + '|' + product.PRICE + '|1';
-                storage[product.ID] = value;
-                storage['addItemList'] += product.ID + ',';
-                app.addItemList.push(product.ID);
-                this.advproduct.NUM = 1;
-                app.addItems.push(product);
-                app.addcartLBText = '已加入購物車。';
-                app.addcartLB = true;
-                app.caltotal();
-            }
-        },
+
         changePage() {
             const t = document.getElementById('toggleClass');
             document.documentElement.scrollTop = t.offsetTop - 150;
@@ -245,8 +282,7 @@ const app = new Vue({
                 total += addItems[i].PRICE * addItems[i].NUM;
             }
             this.total = total;
-        }
-
+        },
     },
     computed: {
         pages() {
@@ -289,6 +325,7 @@ const app = new Vue({
             return [this.Allproducts, this.selectedType2];
         },
 
+
     },
     watch: {
         watchProducts: function() {
@@ -311,6 +348,12 @@ const app = new Vue({
                 app.addcartLB = true;
             }
         },
+        addItems: {
+            handler: function() {
+                this.caltotal();
+            },
+            deep: true,
+        }
     },
 
 });

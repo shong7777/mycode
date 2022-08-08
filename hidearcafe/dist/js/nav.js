@@ -12,7 +12,6 @@ $(function() {
             .post('./phps/checkorder.php', params).then(function(res) {
                 let data = res.data;
                 if (data === 1) {
-                    console.log(data);
                     location.href = `./orders.html?orders_no=${orderNo}`;
                 } else {
                     alert('訂單編號輸入錯誤或是沒有這筆訂單。')

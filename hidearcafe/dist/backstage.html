@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
@@ -14,62 +14,76 @@
         <ul id='linkul'></ul>
     </div>
     <div id="page_content">
-        <div id="serverinfo"><input type="button" value="←" id="hidenavigation" onclick="hidenavigation()"></div>
+        <div id="serverinfo">
+            <div><input type="button" value="←" id="hidenavigation" onclick="hidenavigation()"></div>
+            <form action="./phps/logout.php"><span id="username"></span><input type="submit" value="登出" id='logout'></form>
+        </div>
         <div id="load">資料讀取中請稍後...</div>
-        <iframe src="./management.html?tablename=orders" frameborder="0" id='responsivetable' onload='loadiframe()'></iframe>
+        <iframe src="./login.html" frameborder="0" id='responsivetable' onload="loadiframe()"></iframe>
     </div>
     <script>
+        const storage = sessionStorage;
+        var hidenav;
+        var managementpath = './management.html?tablename=';
+        var lilist = [{
+            name: "訂單待處理列表",
+            tablename: 'orders',
+        }, {
+            name: "商品列表",
+            tablename: 'product',
+        }, {
+            name: "加價購列表",
+            tablename: 'addprice',
+        }, {
+            name: "滿額贈列表",
+            tablename: 'gift_with_purchase',
+        }, {
+            name: "折價券贈品列表",
+            tablename: 'diveaway',
+        }, {
+            name: "廣告列表",
+            tablename: 'adv',
+        }, {
+            name: "折價碼列表",
+            tablename: 'coupon',
+        }, {
+            name: "訂單全部列表",
+            tablename: 'Allorders',
+        }, {
+            name: "新增商品",
+            tablename: 'prodInsert',
+        }, ]
         window.addEventListener('load', init())
-        var hidenav = false;
 
         function init() {
-            let lilist = [{
-                name: "訂單待處理列表",
-                link: 'orders'
-            }, {
-                name: "商品列表",
-                link: 'product'
-            }, {
-                name: "加價購列表",
-                link: 'addprice'
-            }, {
-                name: "滿額贈列表",
-                link: 'gift_with_purchase'
-            }, {
-                name: "廣告列表",
-                link: 'adv'
-            }, {
-                name: "折價碼列表",
-                link: 'coupon'
-            }, {
-                name: "訂單全部列表",
-                link: 'Allorders'
-            }, ]
-            lilist.forEach(obj => addlinkli(obj, changeiframe))
-            addlinkli({
-                name: '新增商品'
-            }, additem)
+            let url = new URL(location.href);
+            const tablename = url.searchParams.get('tablename');
+            setiframe(tablename)
+            lilist.forEach(obj => addlinkli(obj))
+            let index = lilist.indexOf(lilist.filter(o => o.tablename === tablename)[0]);
+            let selectli = document.querySelector('#linkul').querySelectorAll('li')[index];
+            if (index != -1) selectli.querySelector('a').setAttribute('class', 'selected');
         }
 
-        function addlinkli(data, callback) {
+        function addlinkli(data) {
             let li = document.createElement('li');
-            li.setAttribute('data-link', data.link || '');
-            li.innerText = data.name;
-            li.addEventListener('click', callback)
+            let a = document.createElement('a');
+            let path = './backstage.html?tablename=';
+            let link = path + data.tablename || '';
+            li.appendChild(a);
+            a.setAttribute('href', link);
+            a.innerText = data.name;
             document.getElementById('linkul').appendChild(li);
         }
 
-        function changeiframe(e) {
-            let path = './management.html?tablename=';
-            document.getElementById('responsivetable').src = path + e.target.dataset.link;
-            document.getElementById('load').setAttribute('class', '');
 
-        }
 
-        function additem(e) {
-            let path = './prodInsert.html';
+        function setiframe(tablename) {
+            let path;
+            if (tablename === 'prodInsert') {
+                path = './prodInsert.html';
+            } else path = './management.html?tablename=' + tablename;
             document.getElementById('responsivetable').src = path;
-            document.getElementById('load').setAttribute('class', '');
         }
 
         function loadiframe() {

@@ -13,7 +13,14 @@ window.addEventListener('load', init());
 
 function init() {
     axios
-        .all([getableth(), getlist()]).then(axios.spread((tablethdata, list) => {
+        .all([getsession(), getableth(), getlist()]).then(axios.spread((session, tablethdata, list) => {
+            if (session.data === '未登入') {
+                // alert('請登入後操作，跳轉登入頁面。')
+                location.href = './login.html';
+            } else {
+                window.parent.document.querySelector('#username').innerText = session.data;
+                window.parent.document.querySelector('#logout').style.display = 'inline-block';
+            }
             let data = tablethdata.data.filter(obj => obj.table === tablename)[0];
             if (tablename === 'Allorders') {
                 data = tablethdata.data.filter(obj => obj.table === 'orders')[0];
@@ -22,6 +29,15 @@ function init() {
             without = data.without;
             writetableth(tableth);
             products = list.data;
+            if (tablename === 'orders' || tablename === 'Allorders') {
+                let adjustData = [];
+                products.forEach(p => {
+                    delete p.ORDERS_NO;
+                    delete p.QUANTITY;
+                    adjustData.push(p)
+                })
+                products = adjustData;
+            }
             addpagep(products)
             writetabletd(products, without);
             let img = tableth.filter(obj => obj.DATA_NAME === 'IMG').length != 0;
@@ -33,6 +49,7 @@ function init() {
             if (tablename === 'orders') {
                 sort('int', -1, 'ORDER_STATE');
                 addorderinfodiv()
+                document.querySelector('#tableSort').setAttribute('class', 'order')
             } else {
                 sort('int', -1, 'ONSALE');
             }
@@ -41,6 +58,12 @@ function init() {
         }));
 };
 
+function getsession() {
+    return axios({
+        url: './phps/getsession.php',
+        method: 'get',
+    })
+}
 
 
 function getableth() {
@@ -120,6 +143,13 @@ function writetabletd(list, without) {
             } else if (j === 'GRADE') {
                 td.innerHTML = `<select onchange='selectupdate(this)'><option value="1">低</option><option value="2">中</option><option value="3">高</option></select>`;
                 td.firstChild.value = i[j];
+            } else if (j === 'STOCK') {
+                td.innerHTML = `<div></div><input type="num"><input type="button" value="修改庫存" onclick='updateStock(this)'>`;
+                let str = i[j] != null ? '目前庫存：' + i[j] : '無庫存設定';
+                td.firstChild.innerText = str;
+            } else if (j === 'DELIVERY_METHOD') {
+                td.innerHTML = `<select onchange='selectupdate(this)'><option value="0">常溫宅配</option><option value="1">冷藏宅配</option><option value="2">冷凍宅配</option></select>`;
+                td.firstChild.value = i[j];
             } else {
                 td.innerHTML = i[j];
             }
@@ -192,6 +222,10 @@ function edit(t) {
 
     };
     t.addEventListener('focusout', (e) => {
+        if (t.firstChild.value.indexOf('|') != -1) {
+            alert('文字資料中不可以包含 | 此特殊符號，請重新輸入。')
+            return false;
+        }
         updateinfo(e)
         if (t.firstChild.tagName === "TEXTAREA") {
             let value = t.firstChild.value;
@@ -219,6 +253,7 @@ function addeditpicform() {
     div.setAttribute('id', 'editpicbg');
     div.innerHTML = `<form action="" method="post" enctype="multipart/form-data" id='editpicform'>
                         更換圖片:<input type="file" name="upFile" accept="image/*"><br><br>
+                        <div id='croppiediv'></div>
                         圖片預覽:<br>
                         <img src="" alt="" id="img" ><br><br>
                         <input type="hidden" name="img">
@@ -274,12 +309,12 @@ function updateinfo(e) {
     params.append('column', table.tHead.rows[0].cells[index].getAttribute('data-name'));
     return axios.post('./phps/update.php', params).then(result => {
         console.log(result.data);
-        // if (result.data != '修改資料成功') {
-        //     alert('修改失敗，請重新操作。');
-        //     location.reload();
-        //     return false;
-        // }
-        // alert('資料修改成功。')
+        if (result.data != '修改資料成功') {
+            alert('修改失敗，請重新操作。');
+            location.reload();
+            return false;
+        }
+        alert('資料修改成功。')
     }).catch((error) => console.log(error))
 }
 
@@ -292,14 +327,50 @@ function readFile(file) { //判斷型別是不是圖片
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-        let width = 250;
-        if (tablename === 'adv') {
-            width = 550;
-        }
-        dealImage(reader.result, { width: width, quality: 1 }, base => {
-            document.getElementById('img').setAttribute('src',
-                base);
-            document.getElementById('editpicform').img.value = base;
+        dealImage(reader.result, { quality: 1 }, base => {
+            let opts = {
+                viewport: tablename === 'adv' ? {
+                    width: 300,
+                    height: 200
+                } : {
+                    width: 300,
+                    height: 225
+                },
+                showZoomer: false,
+                enableOrientation: true,
+                enableExif: true,
+            }
+
+            document.getElementById('croppiediv').innerHTML = `<div id='croppie' style="height: 300px;width:300px;"></div>
+                <input type="button" value="旋轉90度" id="rotate">
+                <input type="button" value="剪裁圖片" id='getimg'>`
+            c = new Croppie(document.getElementById('croppie'), opts);
+            c.bind({ url: base });
+            document.getElementById('rotate').addEventListener('click', rotateimg)
+            document.getElementById('getimg').addEventListener('click', getimg)
+            document.forms[0].tablename.addEventListener('change', () => {
+                document.getElementById('croppiediv').innerHTML = ''
+            })
+
+            function rotateimg() {
+                c.rotate(90)
+            }
+
+            function getimg() {
+                c.result({
+                    type: 'canvas',
+                    format: 'jpeg',
+                    quality: '1',
+                    size: {
+                        width: tablename === 'adv' ? 1200 : 600,
+                        height: tablename === 'adv' ? 900 : 450,
+                    }
+                }).then(function(img) {
+                    document.getElementById('img').setAttribute('src',
+                        img);
+                    document.forms[0].img.value = img;
+                });
+            }
         });
     }
 }
@@ -327,13 +398,15 @@ function writeorderinfo(data) {
     let orderinfo = data[0],
         items = data[1],
         addprice = data[2],
-        gwp = data[3];
+        gwp = data[3],
+        diveaway = data[4];
     let div = document.getElementById('orderinfo');
+    console.log(orderinfo.NOTE)
     div.innerHTML =
         `<div>
             <div class="infoT">
                 <div>
-                    <label>訂單編號:</label> ${orderinfo.ORDERS_NO}
+                    <label>訂單編號:</label> ${orderinfo.orders_no}
                 </div>
                 <div>
                     <label>訂購人：</label> ${orderinfo.NAME_SENDER}
@@ -354,27 +427,69 @@ function writeorderinfo(data) {
                     <label>收件人地址：</label> ${orderinfo.ZIPCODE + ' ' + orderinfo.ADD_RECEIVER}
                 </div>
                 <div>
-                    <label>附註：</label> ${orderinfo.NOTE}
-            
+                    <table class='list-note'>
+                        <tr>
+                            <td>附註：</td> 
+                            <td>${orderinfo.NOTE}</td>
+                        </tr>
+                    </table>
                 </div>
-                <div><label>寄送方式：宅配到府</label><br>
+                <div><label>寄送方式：<select><option value="0">常溫宅配</option><option value="1">冷藏宅配</option><option value="2">冷凍宅配</option></select></label><br>
                     <label>運費: ${orderinfo.DELIVERY_FEE}</label>
                 </div>
                 <div><label>折扣：${orderinfo.DISCOUNT}</label> </div>
                 <div><label>總計：${orderinfo.TOTAL}</label></div>
-                <div><label>訂單狀態：<select disabled><option value="0">未付款</option><option value="1">準備出貨</option><option value="2">商品已寄出</option><option value="3">商品已送達</option><option value="-1">取消訂單</option></select>
+                <div><label>訂單狀態：<select><option value="0">未付款</option><option value="1">準備出貨</option><option value="2">商品已寄出</option><option value="3">商品已送達</option><option value="-1">取消訂單</option></select>
                 </label></div>
             </div>
             <div style="text-align: center;margin-bottom:20px;">訂單內容：</div>
             <table class="itemList" id='itemList'></table>
         </div>`;
-    div.querySelector('select').value = orderinfo.ORDER_STATE;
-    additems(items, addprice, gwp)
+    if (orderinfo.NOTE != '') {
+        document.querySelector('.list-note').querySelectorAll('td')[1].classList.add('remind')
+    }
+    let state_select = div.querySelectorAll('select')[1];
+    state_select.value = orderinfo.ORDER_STATE;
+    state_select.addEventListener('change', (e) => {
+        let params = new URLSearchParams();
+        params.append('tablename', tablename);
+        params.append('value', e.target.value);
+        params.append('orders_no', orderinfo.orders_no);
+        params.append('column', 'ORDER_STATE');
+        axios.post('./phps/update.php', params).then(result => {
+            if (result.data != '修改失敗') {
+                alert('修改成功');
+                location.reload();
+            } else {
+                alert('庫存資料輸入錯誤')
+            }
+        }).catch((error) => console.log(error))
+    })
+    let DELIVERY_select = div.querySelectorAll('select')[0];
+    DELIVERY_select.value = orderinfo.DELIVERY_METHOD;
+    DELIVERY_select.addEventListener('change', (e) => {
+        let params = new URLSearchParams();
+        params.append('tablename', tablename);
+        params.append('value', e.target.value);
+        params.append('orders_no', orderinfo.orders_no);
+        params.append('column', 'DELIVERY_METHOD');
+        axios.post('./phps/update.php', params).then(result => {
+            if (result.data != '修改失敗') {
+                alert('修改成功');
+                location.reload();
+            } else {
+                alert('庫存資料輸入錯誤')
+            }
+        }).catch((error) => console.log(error))
+    })
+    additems(items, addprice, gwp, diveaway)
     div.classList.value = div.classList.value.replace('hide', '');
     div.getElementsByTagName('div')[0].addEventListener('click', e => e.stopPropagation())
 }
 
-function additems(items, addprice, gwp) {
+
+
+function additems(items, addprice, gwp, diveaway) {
     let div = document.getElementById('itemList');
     items.forEach(item => {
         div.appendChild(newtr(item));
@@ -394,6 +509,15 @@ function additems(items, addprice, gwp) {
         tr.innerHTML = '<td>滿額贈</td>';
         div.appendChild(tr);
         gwp.forEach(item => {
+            div.appendChild(newtr(item));
+        });
+    }
+    if (diveaway.length > 0) {
+        let tr = document.createElement('tr');
+        tr.setAttribute('class', 'item')
+        tr.innerHTML = '<td>折價券贈品</td>';
+        div.appendChild(tr);
+        diveaway.forEach(item => {
             div.appendChild(newtr(item));
         });
     }
@@ -502,5 +626,30 @@ function selectupdate(e) {
         alert('修改成功')
         if (tablename === 'orders') location.reload();
         // if (column === 'ORDER_STATE') sort('int', -1, 'ORDER_STATE');
+    }).catch((error) => console.log(error))
+}
+
+function updateStock(e) {
+    let value = e.parentNode.querySelector('input').value;
+    if (value === 'cancel') value = null;
+    else if (isNaN(parseInt(value))) {
+        alert('庫存請輸入數字或是cancel');
+        return false
+    }
+    let params = new URLSearchParams();
+    params.append('tablename', tablename);
+    params.append('value', value);
+    params.append('ID', e.parentNode.parentNode.cells[0].innerText);
+    axios.post('./phps/updatestock.php', params).then(result => {
+        if (result.data != '修改失敗') {
+            alert('修改成功')
+            let td = e.parentNode;
+            let num = result.data;
+            td.innerHTML = `<div></div><input type="num"><input type="button" value="修改庫存" onclick='updateStock(this)'>`;
+            let str = num != '' ? '目前庫存：' + num : '無庫存設定';
+            td.firstChild.innerText = str;
+        } else {
+            alert('庫存資料輸入錯誤')
+        }
     }).catch((error) => console.log(error))
 }
